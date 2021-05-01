@@ -15,7 +15,7 @@ jobs:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
     steps:
       - name: Tagname
-        run : echo "$ARCHIVE_NAME"
+        run : echo $ARCHIVE_NAME
 #       - uses: actions/checkout@v1
 #       - uses: actions/setup-node@v1
 #         with:
