@@ -12,7 +12,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }
+      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
     steps:
       - name: Tagname
         run : echo "$ARCHIVE_NAME"
