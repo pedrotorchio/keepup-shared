@@ -2,19 +2,25 @@
   "name": "models",
   "version": "1.0.0",
   "description": "keepup models",
+  "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "tsc"
+    "prepublish": "tsc"
   },
   "author": "pedrotorchio@gmail.com",
   "license": "ISC",
   "devDependencies": {
-    "tsc": "^1.20150623.0",
-    "type-fest": "^1.0.2"
+    "@types/d3": "^6.3.0",
+    "@types/pad-left": "^2.1.0",
+    "@types/string-similarity": "^4.0.0",
+    "type-fest": "^1.0.2",
+    "typescript": "^4.2.4"
   },
   "dependencies": {
     "d3": "^6.7.0",
+    "moment": "^2.29.1",
+    "pad-left": "^2.1.0",
     "string-similarity": "^4.0.4",
     "utils": "file:../utils"
   }

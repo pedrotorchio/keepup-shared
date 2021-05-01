@@ -3,9 +3,8 @@ import ActivityEntry from './ActivityEntry';
 import { color, interpolate, interpolateHcl, interpolateRgb, ScaleLinear, scaleLinear, scaleQuantize } from 'd3';
 import { compareTwoStrings } from 'string-similarity';
 import { PartialDeep } from 'type-fest';
-import { addTime, ceilTime, diff, floorTime, timeToMinutesFromMidnight } from 'utils';
-import colors from '@/styles/colors.sass';
-import { autonomy } from '@/config';
+import { addTime, ceilTime, diff, floorTime, timeToMinutesFromMidnight } from '../utils';
+import { autonomyList, colors }  from '../config';
 
 const SIMILARITY_RATE = .8;
 
@@ -85,7 +84,7 @@ export default class ActivityVisualisation {
   constructor(config: Partial<VisualisationConfiguration> = {}) {
     this._config = {
       roundTime: false,
-      autonomyRange: autonomy.range,
+      autonomyRange: autonomyList.range,
       ...config
     }
   }
