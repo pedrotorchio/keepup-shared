@@ -14,8 +14,10 @@ jobs:
     env:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
     steps:
-      - name: Tagname
-        run : echo $ARCHIVE_NAME
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
+      - name: Tag name
+        run : echo ${{ steps.tagName.outputs.tag }}
 #       - uses: actions/checkout@v1
 #       - uses: actions/setup-node@v1
 #         with:
