@@ -1,5 +1,5 @@
 {
-  "name": "models",
+  "name": "@keepup/shared",
   "version": "1.0.0",
   "description": "keepup models",
   "types": "dist/index.d.ts",
