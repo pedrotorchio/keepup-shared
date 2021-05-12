@@ -1,9 +1,10 @@
 import { PartialDeep } from 'type-fest';
+import { PartialNullableDeep, ExtraData, NullableDeep, Nullable } from '../types/General';
 export interface RecordPayload {
   uuid?: string;
   root_user?: string;
   patient_id?: string;
-  data: PartialDeep<NullableDeep<RecordData>>;
+  data: PartialNullableDeep<RecordData>;
   archived?: boolean;
   created_at?: string;
   updated_at?: string;

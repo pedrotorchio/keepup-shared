@@ -1,3 +1,5 @@
+import { Nullable } from "../types/General";
+
 export default class Item<T = string> {
   private _items: Nullable<Item<T>[]> = null;
   private _tags: string[] = [];

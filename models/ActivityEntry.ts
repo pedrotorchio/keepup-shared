@@ -1,3 +1,4 @@
+import { Nullable, NullableObjectFields } from '../types/General';
 import Activity, { ActivityData } from './Activity';
 
 interface GlobalActivityDetails {

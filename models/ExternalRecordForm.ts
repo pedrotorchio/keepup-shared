@@ -1,10 +1,11 @@
 import { PartialDeep } from 'type-fest';
+import { NullableDeep, ExtraData, Nullable, PartialNullableDeep } from '../types/General';
 export interface ExternalRecordFormPayload {
   uuid?: string;
   root_user?: string;
   record_id?: string;
   is_active?: boolean;
-  data: PartialDeep<NullableDeep<ExternalRecordFormData>>;
+  data: PartialNullableDeep<ExternalRecordFormData>;
   archived?: boolean;
   created_at?: string;
   updated_at?: string;

@@ -3,7 +3,7 @@ import ActivityEntry from './ActivityEntry';
 import { color, interpolate, interpolateHcl, interpolateRgb, ScaleLinear, scaleLinear, scaleQuantize } from 'd3';
 import { compareTwoStrings } from 'string-similarity';
 import { PartialDeep } from 'type-fest';
-import { addTime, ceilTime, diff, floorTime, timeToMinutesFromMidnight } from '../utils';
+import { addTime, ceilTime, timeDiff, floorTime, timeObjectToMinutesFromMidnight } from '../utils';
 import { autonomyList, colors }  from '../config';
 
 const SIMILARITY_RATE = .8;
@@ -68,7 +68,7 @@ export const getTitleGroups = (activityList: Activity[]) => {
 const sortEntries = <T extends ActivityEntry | Activity>(activityEntries: T[]): T[]=> {
   const entries = [...activityEntries];
   const startTime = (act: ActivityEntry | Activity) => act.data.startTime!;
-  const startTimeInMinutes = (act: ActivityEntry | Activity) => timeToMinutesFromMidnight(startTime(act));
+  const startTimeInMinutes = (act: ActivityEntry | Activity) => timeObjectToMinutesFromMidnight(startTime(act));
   entries.sort((a, b) => {
     return startTimeInMinutes(a) - startTimeInMinutes(b);
   });
@@ -104,10 +104,10 @@ export default class ActivityVisualisation {
     if (!sortedActivities?.length || !lastStartTime) return null;
     const lastDuration = sortedActivities[lastIndex].data.duration ?? 0;
     const endTime = addTime(lastStartTime, lastDuration);
-    return this.config.roundTime ? ceilTime(endTime, "string", { capMidnight: true }) : endTime;
+    return this.config.roundTime ? ceilTime(endTime, { expect: "string", capMidnight: true }) : endTime;
   }
   get wholeDuration(): number {
-    if (this.endTime && this.startTime) return diff(this.endTime, this.startTime);
+    if (this.endTime && this.startTime) return timeDiff(this.endTime, this.startTime);
     return addDurations(this._activityList);
   }
   get durationScale(): (duration: number) => number {
@@ -124,7 +124,7 @@ export default class ActivityVisualisation {
       // if there's no start time reference,
       // make all of them start in zero
       if (!timeZero || !time) return 0;
-      const startTimeInMinutes = diff(time, timeZero);
+      const startTimeInMinutes = timeDiff(time, timeZero);
       return this.durationScale(startTimeInMinutes);
     }
   }
@@ -156,13 +156,13 @@ export default class ActivityVisualisation {
     const overflowsDay = (act: Activity) => {
       const duration = act.data.duration;
       const startTime = act.data.startTime;
-      const minutes = timeToMinutesFromMidnight(startTime!) + duration!;
+      const minutes = timeObjectToMinutesFromMidnight(startTime!) + duration!;
 
       return minutes >= 24*60;
     }
     const cappedDuration = (activity: Activity): number => {
       const { startTime, duration } = activity.data;
-      const minutesFromMidnight = timeToMinutesFromMidnight(startTime!) + duration!;
+      const minutesFromMidnight = timeObjectToMinutesFromMidnight(startTime!) + duration!;
       const minutesPastMidnight = minutesFromMidnight - 24*60;
       if (minutesPastMidnight >= 0) return duration! - (minutesPastMidnight + 1);
       return duration!;

@@ -1,4 +1,5 @@
 import { PartialDeep } from 'type-fest';
+import { Nullable, ExtraData, NullableDeep, PartialNullableDeep } from '../types/General';
 export interface ActivityPayload {
   uuid: string
   rootUser: string
@@ -56,7 +57,7 @@ export default class Activity {
     record.archived = data.archived ?? false
     return record;
   }
-  toJSON(): PartialDeep<NullableDeep<ActivityPayload>> {
+  toJSON(): PartialNullableDeep<ActivityPayload> {
     return {
       uuid: this.uuid ?? null,
       rootUser: this.rootUser ?? null,
