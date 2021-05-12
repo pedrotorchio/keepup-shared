@@ -1,5 +1,5 @@
 import { PartialDeep } from 'type-fest';
-import { Nullable, ExtraData, NullableDeep, PartialNullableDeep } from '../types/General';
+import { Nullable, ExtraData, NullableDeep, PartialNullableDeep, NullableObjectFields } from '../types/General';
 export interface ActivityPayload {
   uuid: string
   rootUser: string
@@ -24,17 +24,17 @@ export interface ActivityData extends ExtraData {
   duration: number;
   autonomy: number;
 }
-const mkData = (): NullableDeep<ActivityData> => ({
-  autonomy: null,
-  duration: null,
-  longDescription: null,
-  shortDescription: null,
-  startTime: null
+const mkData = (): ActivityData => ({
+  autonomy: 0,
+  duration: 0,
+  longDescription: "",
+  shortDescription: "",
+  startTime: ""
 });
 export default class Activity {
   uuid: Nullable<string> = null
   rootUser: Nullable<string> = null
-  data: NullableDeep<ActivityData> = mkData();
+  data: ActivityData = mkData();
   archived: boolean = false
   creatorIdentifier: Nullable<string> = null;
   createdAt: Nullable<string> = null
@@ -57,7 +57,7 @@ export default class Activity {
     record.archived = data.archived ?? false
     return record;
   }
-  toJSON(): PartialNullableDeep<ActivityPayload> {
+  toJSON(): NullableObjectFields<ActivityPayload> {
     return {
       uuid: this.uuid ?? null,
       rootUser: this.rootUser ?? null,
