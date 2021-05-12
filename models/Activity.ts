@@ -1,13 +1,20 @@
 import { PartialDeep } from 'type-fest';
 export interface ActivityPayload {
-  uuid?: string;
-  root_user?: string;
-  record_id?: string;
-  data?: PartialDeep<NullableDeep<ActivityData>>;
-  creator_identifier?: Nullable<string>;
-  archived?: boolean;
-  updated_at?: string;
-  created_at?: string;
+  uuid: string
+  rootUser: string
+  recordId: string
+  data: ActivityDataPayload,
+  archived: boolean
+  creatorIdentifier: string
+  updatedAt: Nullable<string>
+  createdAt: Nullable<string>
+}
+export interface ActivityDataPayload extends ExtraData {
+  shortDescription: string;
+  longDescription: string;
+  startTime: string;
+  duration: number;
+  autonomy: number;
 }
 export interface ActivityData extends ExtraData {
   shortDescription: string;
@@ -37,26 +44,26 @@ export default class Activity {
   static fromJSON(data: ActivityPayload) {
     const record = new Activity();
     record.uuid = data.uuid ?? null
-    record.rootUser = data.root_user ?? null
+    record.rootUser = data.rootUser ?? null
     record.data = {
       ...mkData(),
       ...data.data
     }
-    record.creatorIdentifier = data.creator_identifier ?? null;
-    record.recordId = data.record_id ?? null;
-    record.updatedAt = data.updated_at ?? null;
-    record.createdAt = data.created_at ?? null;
+    record.creatorIdentifier = data.creatorIdentifier ?? null;
+    record.recordId = data.recordId ?? null;
+    record.updatedAt = data.updatedAt ?? null;
+    record.createdAt = data.createdAt ?? null;
     record.archived = data.archived ?? false
     return record;
   }
-  toJSON(): ActivityPayload {
+  toJSON(): PartialDeep<NullableDeep<ActivityPayload>> {
     return {
-      uuid: this.uuid ?? undefined,
-      root_user: this.rootUser ?? undefined,
-      created_at: this.createdAt ?? undefined,
-      updated_at: this.updatedAt ?? undefined,
-      record_id: this.recordId ?? undefined,
-      creator_identifier: this.creatorIdentifier ?? undefined,
+      uuid: this.uuid ?? null,
+      rootUser: this.rootUser ?? null,
+      createdAt: this.createdAt ?? null,
+      updatedAt: this.updatedAt ?? null,
+      recordId: this.recordId ?? null,
+      creatorIdentifier: this.creatorIdentifier ?? null,
       archived: this.archived ?? false,
       data: this.data
     }
