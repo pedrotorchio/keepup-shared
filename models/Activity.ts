@@ -18,7 +18,7 @@ export interface ActivityPayload {
   updatedAt: Nullable<string>
   createdAt: Nullable<string>
 }
-export interface ActivityModel extends ModelBase<ActivityPayload> {
+export interface IActivityModel extends ModelBase<ActivityPayload> {
   uuid: Nullable<string>
   rootUser: string
   recordId: string
@@ -36,7 +36,7 @@ const mkData = (): ActivityData => ({
   shortDescription: "",
   startTime: ""
 });
-export default class Activity implements ActivityModel {
+export default class Activity implements IActivityModel {
   uuid: Nullable<string> = null
   rootUser: string = ""
   data: ActivityData = mkData();

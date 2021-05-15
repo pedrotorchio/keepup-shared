@@ -1,5 +1,6 @@
 import { PartialDeep } from 'type-fest';
 import { NullableDeep, ExtraData, Nullable, PartialNullableDeep } from '../types/General';
+import { ModelBase } from './ModelBase';
 
 export interface ExternalRecordFormData extends ExtraData {
   name: string;
@@ -16,10 +17,12 @@ export interface ExternalRecordFormPayload {
   tempToken: Nullable<string>;
 }
 
+export interface IExternalRecordForm extends ExternalRecordFormPayload, ModelBase<ExternalRecordFormPayload> {}
+
 const mkEmptyData = (): ExternalRecordFormData => ({
   name: ""
 });
-export default class ExternalRecordForm {
+export default class ExternalRecordForm implements IExternalRecordForm {
   uuid: Nullable<string> = null
   rootUser: string = ""
   data: ExternalRecordFormData = mkEmptyData();
@@ -28,7 +31,7 @@ export default class ExternalRecordForm {
   updatedAt: Nullable<string> = null
   isActive: boolean = true
   recordId: string = ""
-  token: Nullable<string> = null;
+  tempToken: Nullable<string> = null;
 
   static fromJSON(data: ExternalRecordFormPayload) {
     const externalRecordForm = new ExternalRecordForm();
@@ -43,7 +46,7 @@ export default class ExternalRecordForm {
       ...data.data
     };
     externalRecordForm.archived = data.archived;
-    externalRecordForm.token = data.tempToken;
+    externalRecordForm.tempToken = data.tempToken;
     return externalRecordForm;
   }
   toJSON(): ExternalRecordFormPayload {
@@ -56,7 +59,7 @@ export default class ExternalRecordForm {
       createdAt: this.createdAt,
       archived: this.archived,
       data: this.data,
-      tempToken: this.token
+      tempToken: this.tempToken
     }
   }
   clone() {
