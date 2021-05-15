@@ -1,5 +1,5 @@
 import moment, { Moment } from "moment";
-import { isMomentObject, isNumericTimeObject, isNumericValue, isPaddedTimeObject, isTimeObject, padInteger, padTimeString, parseTime, parseTimeStringToMomentObject, parseTimeStringToTimeObject, stringifyMomentObject, stringifyTime, stringifyTimeObject, minutesFromMidnight, minutesFromMidnightToTime } from "../utils"
+import { isMomentObject, isNumericTimeObject, isNumericValue, isPaddedTimeObject, isTimeObject, padInteger, padTimeString, parseTime, parseTimeStringToMomentObject, parseTimeStringToTimeObject, stringifyMomentObject, stringifyTime, stringifyTimeObject, minutesFromMidnight, minutesFromMidnightToTime, timeDiff, addTime, floorTime, ceilTime } from "../utils"
 
 
 describe("time module", () => {
@@ -91,9 +91,43 @@ describe("time module", () => {
   });
   test("minutesFromMidnightToTime", () => {
     expect(minutesFromMidnightToTime(505)).toEqual({ hh: "08", mm: "25" });
-    expect(minutesFromMidnightToTime(505,  "object:padded")).toEqual({ hh: "08", mm: "25" });
+    expect(minutesFromMidnightToTime(505, "object:padded")).toEqual({ hh: "08", mm: "25" });
     expect(minutesFromMidnightToTime(505, "object:numeric")).toEqual({ hh: 8, mm: 25 });
     expect(minutesFromMidnightToTime(505, "string")).toEqual("08:25");
     expect(minutesFromMidnightToTime(505, "moment")).toBeMomentObject("08", "25");
   });
+  test("timeDiff", () => {
+    expect(timeDiff("23:30", "08:25")).toBe(905);
+    expect(timeDiff("23:30", "08:25", "minutes")).toBe(905);
+    expect(timeDiff("23:30", "08:25", "hour")).toBe(15);
+  });
+  test("addTime", () => {
+    expect(addTime("08:15", 10)).toBe("08:25");
+    expect(addTime("08:15", 10, { addedUnit: "minutes" })).toBe("08:25");
+    expect(addTime("08:15", 10, { addedUnit: "hour" })).toBe("18:15");
+
+    expect(addTime({ hh: "08", mm: "15" }, 10)).toEqual({ hh: "08", mm: "25" });
+    expect(addTime({ hh: 8, mm: 15 }, 10)).toEqual({ hh: 8, mm: 25 });
+    expect(addTime(moment("08:15", "hh:mm"), 10)).toBeMomentObject("08", "25");
+
+    expect(addTime("08:15", 10, { expect: "string" })).toBe("08:25");
+    expect(addTime("08:15", 10, { expect: "object:padded" })).toEqual({ hh: "08", mm: "25"});
+    expect(addTime("08:15", 10, { expect: "object:numeric" })).toEqual({ hh: 8, mm: 25 });
+    expect(addTime("08:15", 10, { expect: "moment" })).toBeMomentObject("08", "25");
+
+    expect(addTime("23:30", 60, { capMidnight: false })).toBe("00:30");
+    expect(addTime("23:30", 60, { capMidnight: true })).toBe("23:59");
+  });
+
+  test("floorTime", () => {
+    expect(floorTime("08:25")).toEqual("08:00");
+    expect(floorTime("8:25")).toEqual("08:00");
+    expect(floorTime("8:25", { expect: "object:padded" })).toEqual({ hh: "08", mm: "00" });
+  });
+  test("ceilTime", () => {
+    expect(ceilTime("08:25")).toEqual("09:00");
+    expect(ceilTime("23:25")).toEqual("00:00");
+    expect(ceilTime("23:25", { capMidnight: true })).toEqual("23:59");
+  });
+
 })

@@ -86,7 +86,7 @@ export function parseTimeStringToTimeObject(time: string, numeric: true | false 
   if (!numeric) return { hh: paddedHH, mm: paddedMM };
   else return { hh: parseInt(paddedHH), mm: parseInt(paddedMM) };
 }
-export const parseTimeStringToMomentObject = (time: string) => moment(time, ['HH:mm', 'H:mm', 'HH:m', 'H,m']);
+export const parseTimeStringToMomentObject = (time: string) => moment.utc(time, ['HH:mm', 'H:mm', 'HH:m', 'H,m']);
 
 export function parseTime(time: TimeInputType): TimeObject<string>;
 export function parseTime(time: TimeInputType, expect: 'string'): string;
@@ -111,7 +111,11 @@ export function parseTime(time: TimeInputType, expect: TimeTypeArgument = "objec
   return padTimeString(time);
 }
 /** OPERATIONS */
-
+export function areDifferentDays(timeA: TimeInputType, timeB: TimeInputType) {
+  const dayA = parseTime(timeA, "moment").date();
+  const dayB = parseTime(timeB, "moment").date();
+  return dayB !== dayA;
+}
 export function minutesFromMidnight(time: TimeInputType): number {
   const { hh: hours, mm: minutes } = parseTime(time, 'object:numeric');
   return hours * 60 + minutes;
@@ -134,30 +138,25 @@ export function timeDiff(timeA: TimeInputType, timeB: TimeInputType, timeUnit: u
   return momentA.diff(momentB, timeUnit);
 }
 
-type AddTimeOptions<Expect extends TimeTypeArgument> = { capMidnight?: boolean, addedUnit?: unitOfTime.Base, expect?: Expect };
+type AddTimeOptions<Expect extends TimeTypeArgument, AddedUnit extends unitOfTime.Base> = { capMidnight?: boolean, addedUnit?: AddedUnit, expect?: Expect };
 // Overloads: 'options.expect' defaults to type of 'time'
-export function addTime<V extends TimeInputType>(time: V, amount: number, options?: AddTimeOptions<TimeArgumentFor<V>>): V;
+export function addTime<V extends TimeInputType, U extends unitOfTime.Base>(time: V, amount: number, options?: AddTimeOptions<TimeArgumentFor<V>, U>): V;
 // Overloads: 'options.expect' change the return type
-export function addTime(time: TimeInputType, amount: number, options: AddTimeOptions<'string'>): string;
-export function addTime(time: TimeInputType, amount: number, options: AddTimeOptions<'moment'>): Moment;
-export function addTime(time: TimeInputType, amount: number, options: AddTimeOptions<'object:padded'>): TimeObject<string>;
-export function addTime(time: TimeInputType, amount: number, options: AddTimeOptions<'object:numeric'>): TimeObject<number>;
-export function addTime(time: TimeInputType, amount: number, options: AddTimeOptions<TimeTypeArgument> = {}): TimeInputType {
+export function addTime<U extends unitOfTime.Base>(time: TimeInputType, amount: number, options: AddTimeOptions<'string', U>): string;
+export function addTime<U extends unitOfTime.Base>(time: TimeInputType, amount: number, options: AddTimeOptions<'moment', U>): Moment;
+export function addTime<U extends unitOfTime.Base>(time: TimeInputType, amount: number, options: AddTimeOptions<'object:padded', U>): TimeObject<string>;
+export function addTime<U extends unitOfTime.Base>(time: TimeInputType, amount: number, options: AddTimeOptions<'object:numeric', U>): TimeObject<number>;
+export function addTime<U extends unitOfTime.Base>(time: TimeInputType, amount: number, options: AddTimeOptions<TimeTypeArgument, U> = {}): TimeInputType {
   const {
     capMidnight = false,
     addedUnit = "minutes",
     expect = timeTypeArgumentFromValue(time)
   } = options;
-
-  amount = (() => {
-    const endtimeInMinutes = minutesFromMidnight(time) + amount;
-    const minutesPastMidnight = endtimeInMinutes - 60 * 24;
-    // cap last duration up to 23:59
-    if (minutesPastMidnight >= 0) amount = endtimeInMinutes - (minutesPastMidnight + 1);
-    return amount;
-  })();
-  const moment = parseTime(time, 'moment').add(amount, addedUnit);
-  return parseTime(moment, expect as any);
+  const timeMomentObject = parseTime(time, 'moment');
+  const resultMomentObject = timeMomentObject.clone().add(amount, addedUnit);
+  const hasPassedMidnight = areDifferentDays(resultMomentObject, timeMomentObject);
+  const finalMomentObject = capMidnight && hasPassedMidnight ? "23:59" : resultMomentObject;
+  return parseTime(finalMomentObject, expect as any);
 }
 type FloorTypeOptions<Expect extends TimeTypeArgument> = { expect?: Expect };
 export function floorTime<T extends TimeInputType>(time: T): T;
@@ -186,11 +185,10 @@ export function ceilTime(time: TimeInputType, options: CeilTimeOptions<TimeTypeA
   const moment = parseTime(time, 'moment');
   const mm = moment.minutes();
   const parsed: TimeInputType = parseTime(time, expect as any);
+  // if already rounded, simply return it
   if (mm === 0) return parsed;
-  const nextHour: Moment = addTime(parsed, 60, { capMidnight, expect: "moment" });
-  if (nextHour.hours() === 23) return parseTime("23:59", expect as any);
-  else {
-    const floored = floorTime(nextHour);
-    return parseTime(floored, expect as any);
-  }
+  // otherwise, round to the next hour
+  const nextHour: Moment = addTime(parsed, 1, { capMidnight, addedUnit: "hour", expect: "moment" });
+  const finalTime = capMidnight ? nextHour : floorTime(nextHour);
+  return parseTime(finalTime, expect as any);
 }
