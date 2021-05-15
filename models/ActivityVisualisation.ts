@@ -162,8 +162,8 @@ export default class ActivityVisualisation {
     }
     const cappedDuration = (activity: Activity): number => {
       const { startTime, duration } = activity.data;
-      const minutesFromMidnight = minutesFromMidnight(startTime!) + duration!;
-      const minutesPastMidnight = minutesFromMidnight - 24*60;
+      const minsFromMidnight = minutesFromMidnight(startTime!) + duration!;
+      const minutesPastMidnight = minsFromMidnight - 24*60;
       if (minutesPastMidnight >= 0) return duration! - (minutesPastMidnight + 1);
       return duration!;
     }
