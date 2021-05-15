@@ -1,7 +1,7 @@
 import moment, { Moment } from "moment";
 import { isMomentObject, isNumericTimeObject, isNumericValue, isPaddedTimeObject, isTimeObject, padInteger, padTimeString, parseTime, parseTimeStringToMomentObject, parseTimeStringToTimeObject, stringifyMomentObject, stringifyTime, stringifyTimeObject, minutesFromMidnight, minutesFromMidnightToTime, timeDiff, addTime, floorTime, ceilTime } from "../utils"
 
-
+const mkMoment = (time: string) => moment.utc(time, "hh:mm");
 describe("time module", () => {
   test("isTimeObject", () => {
     expect(isTimeObject(null)).toBe(false);
@@ -43,7 +43,7 @@ describe("time module", () => {
   })
   test("stringifyTime", () => {
     expect(stringifyTimeObject({ hh: 8, mm: 25 })).toEqual("08:25");
-    expect(stringifyMomentObject(moment("8:25", "hh:mm"))).toEqual("08:25");
+    expect(stringifyMomentObject(mkMoment("8:25"))).toEqual("08:25");
   });
   test("parseTimeStringToTimeObject", () => {
     expect(parseTimeStringToTimeObject("08:25", true)).toEqual({
@@ -55,11 +55,12 @@ describe("time module", () => {
       mm: "25"
     });
     expect(parseTimeStringToMomentObject("8:25")).toBeMomentObject("08", "25");
+    expect(parseTimeStringToMomentObject(moment.utc("08:25", "HH:mm").toISOString(), true)).toBeMomentObject("08", "25");
   });
   test("parseTime", () => {
     // parse all formats into default expected return format object:padded
     expect(parseTime("08:25")).toEqual({ hh: "08", mm: "25" });
-    expect(parseTime(moment("8:25", "hh:mm"))).toEqual({ hh: "08", mm: "25" });
+    expect(parseTime(mkMoment("8:25"))).toEqual({ hh: "08", mm: "25" });
     expect(parseTime({ hh: 8, mm: 25 })).toEqual({ hh: "08", mm: "25" });
     expect(parseTime({ hh: "8", mm: "25" })).toEqual({ hh: "08", mm: "25" });
     // parse string format into all formats
@@ -78,16 +79,16 @@ describe("time module", () => {
     expect(parseTime({ hh: 8, mm: 25 }, "object:padded")).toEqual({ hh: "08", mm: "25" });
     expect(parseTime({ hh: 8, mm: 25 }, "object:numeric")).toEqual({ hh: 8, mm: 25 });
     // parse moment format into all formats
-    expect(parseTime(moment("8:25", "hh:mm"), "string")).toEqual("08:25");
-    expect(parseTime(moment("8:25", "hh:mm"), "moment")).toBeMomentObject("08", "25");
-    expect(parseTime(moment("8:25", "hh:mm"), "object:padded")).toEqual({ hh: "08", mm: "25" });
-    expect(parseTime(moment("8:25", "hh:mm"), "object:numeric")).toEqual({ hh: 8, mm: 25 });
+    expect(parseTime(mkMoment("8:25"), "string")).toEqual("08:25");
+    expect(parseTime(mkMoment("8:25"), "moment")).toBeMomentObject("08", "25");
+    expect(parseTime(mkMoment("8:25"), "object:padded")).toEqual({ hh: "08", mm: "25" });
+    expect(parseTime(mkMoment("8:25"), "object:numeric")).toEqual({ hh: 8, mm: 25 });
   });
   test("minutesFromMidnight", () => {
     expect(minutesFromMidnight("08:25")).toBe(505);
     expect(minutesFromMidnight({ hh: 8, mm: 25 })).toBe(505);
     expect(minutesFromMidnight({ hh: "08", mm: "25" })).toBe(505);
-    expect(minutesFromMidnight(moment("08:25", "hh:mm"))).toBe(505);
+    expect(minutesFromMidnight(mkMoment("08:25"))).toBe(505);
   });
   test("minutesFromMidnightToTime", () => {
     expect(minutesFromMidnightToTime(505)).toEqual({ hh: "08", mm: "25" });
@@ -108,10 +109,10 @@ describe("time module", () => {
 
     expect(addTime({ hh: "08", mm: "15" }, 10)).toEqual({ hh: "08", mm: "25" });
     expect(addTime({ hh: 8, mm: 15 }, 10)).toEqual({ hh: 8, mm: 25 });
-    expect(addTime(moment("08:15", "hh:mm"), 10)).toBeMomentObject("08", "25");
+    expect(addTime(mkMoment("08:15"), 10)).toBeMomentObject("08", "25");
 
     expect(addTime("08:15", 10, { expect: "string" })).toBe("08:25");
-    expect(addTime("08:15", 10, { expect: "object:padded" })).toEqual({ hh: "08", mm: "25"});
+    expect(addTime("08:15", 10, { expect: "object:padded" })).toEqual({ hh: "08", mm: "25" });
     expect(addTime("08:15", 10, { expect: "object:numeric" })).toEqual({ hh: 8, mm: 25 });
     expect(addTime("08:15", 10, { expect: "moment" })).toBeMomentObject("08", "25");
 

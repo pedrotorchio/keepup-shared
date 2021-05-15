@@ -1,4 +1,4 @@
-import moment, { isMoment, Moment, unitOfTime } from 'moment';
+import moment, { isMoment, ISO_8601, Moment, unitOfTime } from 'moment';
 import padLeft from 'pad-left';
 
 const TIME_DISPLAY_FORMAT = "HH:mm";
@@ -86,7 +86,11 @@ export function parseTimeStringToTimeObject(time: string, numeric: true | false 
   if (!numeric) return { hh: paddedHH, mm: paddedMM };
   else return { hh: parseInt(paddedHH), mm: parseInt(paddedMM) };
 }
-export const parseTimeStringToMomentObject = (time: string) => moment.utc(time, ['HH:mm', 'H:mm', 'HH:m', 'H,m']);
+export const parseTimeStringToMomentObject = (time: string, iso: boolean = false) => {
+  const formats = iso ? ISO_8601 : ['HH:mm', 'H:mm', 'HH:m', 'H,m'];
+  const theMoment = moment.utc(time, formats);
+  return theMoment;
+};
 
 export function parseTime(time: TimeInputType): TimeObject<string>;
 export function parseTime(time: TimeInputType, expect: 'string'): string;
