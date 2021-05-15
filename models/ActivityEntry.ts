@@ -1,7 +1,8 @@
-import { Nullable, NullableObjectFields } from '../types/General';
-import Activity, { ActivityData } from './Activity';
+import { ExtraData, Nullable, NullableObjectFields } from '../types/General';
+import Activity, { ActivityData, ActivityPayload } from './Activity';
+import { ModelBase } from './ModelBase';
 
-interface GlobalActivityDetails {
+interface GlobalActivityData {
   originalIndex: number;
   widthRatio: number;
   normalisedTitleIndex: number;
@@ -9,6 +10,12 @@ interface GlobalActivityDetails {
   overflowsDay?: boolean;
   widthRatioCapped?: number;
 }
+interface GlobalActivityDetails extends GlobalActivityData, ModelBase<GlobalActivityDetailsPayload> {}
+interface GlobalActivityDetailsPayload extends GlobalActivityData {
+  activity: ActivityPayload;
+}
+
+
 export default class ActivityEntry implements GlobalActivityDetails {
   originalIndex: number = -1
   widthRatio: number = 0;
@@ -16,7 +23,7 @@ export default class ActivityEntry implements GlobalActivityDetails {
   normalisedTitleIndex: number = -1;
   widthRatioCapped: number = 0;
   overflowsDay: boolean = false;
-  constructor(private activity: Activity, theData: GlobalActivityDetails) {
+  constructor(private activity: Activity, theData: GlobalActivityData) {
     this.originalIndex = theData.originalIndex;
     this.widthRatio = theData.widthRatio;
     this.normalisedTitleIndex = theData.normalisedTitleIndex;
@@ -33,9 +40,25 @@ export default class ActivityEntry implements GlobalActivityDetails {
   get data(): NullableObjectFields<ActivityData> {
     return this.activity.data;
   }
+  toJSON(): GlobalActivityDetailsPayload {
+    return {
+      activity: this.activity.toJSON(),
+      originalIndex: this.originalIndex,
+      widthRatio: this.widthRatio,
+      startRatio: this.startRatio,
+      normalisedTitleIndex: this.normalisedTitleIndex,
+      widthRatioCapped: this.widthRatioCapped,
+      overflowsDay: this.overflowsDay
+    }
+  }
+  static fromJSON({ activity, ...theData }: GlobalActivityDetailsPayload): ActivityEntry {
+    const activityModel = Activity.fromJSON(activity); 
+    const entry = new ActivityEntry(activityModel, theData);
+    return entry;
+  }
   clone(): ActivityEntry {
     const activity = this.activity.clone();
-    const theData: GlobalActivityDetails = {
+    const theData: GlobalActivityData = {
       originalIndex: this.originalIndex,
       widthRatio: this.widthRatio,
       normalisedTitleIndex: this.normalisedTitleIndex,

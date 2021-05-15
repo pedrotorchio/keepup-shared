@@ -1,22 +1,6 @@
-import { PartialDeep } from 'type-fest';
 import { Nullable, ExtraData, NullableDeep, PartialNullableDeep, NullableObjectFields } from '../types/General';
-export interface ActivityPayload {
-  uuid: string
-  rootUser: string
-  recordId: string
-  data: ActivityDataPayload,
-  archived: boolean
-  creatorIdentifier: string
-  updatedAt: Nullable<string>
-  createdAt: Nullable<string>
-}
-export interface ActivityDataPayload extends ExtraData {
-  shortDescription: string;
-  longDescription: string;
-  startTime: string;
-  duration: number;
-  autonomy: number;
-}
+import { ModelBase } from './ModelBase';
+
 export interface ActivityData extends ExtraData {
   shortDescription: string;
   longDescription: string;
@@ -24,6 +8,27 @@ export interface ActivityData extends ExtraData {
   duration: number;
   autonomy: number;
 }
+export interface ActivityPayload {
+  uuid: Nullable<string>
+  rootUser: string
+  recordId: string
+  data: ActivityData,
+  archived: boolean
+  creatorIdentifier: string
+  updatedAt: Nullable<string>
+  createdAt: Nullable<string>
+}
+export interface ActivityModel extends ModelBase<ActivityPayload> {
+  uuid: Nullable<string>
+  rootUser: string
+  recordId: string
+  data: ActivityData
+  archived: boolean
+  creatorIdentifier: string
+  updatedAt: Nullable<string>
+  createdAt: Nullable<string>
+}
+
 const mkData = (): ActivityData => ({
   autonomy: 0,
   duration: 0,
@@ -31,15 +36,15 @@ const mkData = (): ActivityData => ({
   shortDescription: "",
   startTime: ""
 });
-export default class Activity {
+export default class Activity implements ActivityModel {
   uuid: Nullable<string> = null
-  rootUser: Nullable<string> = null
+  rootUser: string = ""
   data: ActivityData = mkData();
   archived: boolean = false
-  creatorIdentifier: Nullable<string> = null;
+  creatorIdentifier: string = "";
   createdAt: Nullable<string> = null
   updatedAt: Nullable<string> = null
-  recordId: Nullable<string> = null
+  recordId: string = "";
 
 
   static fromJSON(data: ActivityPayload) {
@@ -57,7 +62,8 @@ export default class Activity {
     record.archived = data.archived ?? false
     return record;
   }
-  toJSON(): NullableObjectFields<ActivityPayload> {
+
+  toJSON(): ActivityPayload {
     return {
       uuid: this.uuid ?? null,
       rootUser: this.rootUser ?? null,

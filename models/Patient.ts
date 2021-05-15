@@ -1,12 +1,13 @@
 import { PartialDeep } from 'type-fest';
 import { PartialNullableDeep, ExtraData, NullableDeep, Nullable } from '../types/General';
+import { ModelBase } from './ModelBase';
 export interface PatientPayload {
-  uuid?: string;
-  root_user?: string;
-  data: PartialNullableDeep<PatientData>;
-  archived?: boolean;
-  created_at?: string;
-  updated_at?: string;
+  uuid: Nullable<string>;
+  rootUser: string;
+  data: PatientData;
+  archived: boolean;
+  createdAt: Nullable<string>;
+  updatedAt: Nullable<string>;
 }
 export interface PatientData extends ExtraData {
   name: string;
@@ -14,26 +15,28 @@ export interface PatientData extends ExtraData {
   scholarity: number;
   occupation: string;
 }
-const mkEmptyData = (): NullableDeep<PatientData> => ({
-  age: null,
-  name: null,
-  scholarity: null,
-  occupation: null
+export interface PatientModel extends PatientPayload, ModelBase<PatientPayload> {}
+
+const mkEmptyData = (): PatientData => ({
+  age: 0,
+  name: "",
+  scholarity: 0,
+  occupation: ""
 })
-export default class Patient {
+export default class Patient implements PatientModel {
   uuid: Nullable<string> = null
-  rootUser: Nullable<string> = null
-  data: PatientPayload["data"] = mkEmptyData();
+  rootUser: string = ""
+  data: PatientData = mkEmptyData();
   archived: boolean = false
   createdAt: Nullable<string> = null
   updatedAt: Nullable<string> = null
 
-  static fromJSON(data: PatientPayload) {
+  static fromJSON(data: PatientPayload): Patient {
     const patient = new Patient();
-    patient.uuid = data.uuid ?? null
-    patient.rootUser = data.root_user ?? null
-    patient.updatedAt = data.updated_at ?? null
-    patient.createdAt = data.created_at ?? null
+    patient.uuid = data.uuid
+    patient.rootUser = data.rootUser
+    patient.updatedAt = data.updatedAt
+    patient.createdAt = data.createdAt
     patient.data = {
       ...mkEmptyData(),
       ...data.data
@@ -43,10 +46,10 @@ export default class Patient {
   }
   toJSON(): PatientPayload {
     return {
-      uuid: this.uuid ?? undefined,
-      root_user: this.rootUser ?? undefined,
-      created_at: this.createdAt ?? undefined,
-      updated_at: this.updatedAt ?? undefined,
+      uuid: this.uuid,
+      rootUser: this.rootUser,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
       data: this.data,
       archived: this.archived
     }

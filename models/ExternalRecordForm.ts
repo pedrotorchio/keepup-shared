@@ -1,57 +1,62 @@
 import { PartialDeep } from 'type-fest';
 import { NullableDeep, ExtraData, Nullable, PartialNullableDeep } from '../types/General';
-export interface ExternalRecordFormPayload {
-  uuid?: string;
-  root_user?: string;
-  record_id?: string;
-  is_active?: boolean;
-  data: PartialNullableDeep<ExternalRecordFormData>;
-  archived?: boolean;
-  created_at?: string;
-  updated_at?: string;
-  temp_token?: string;
-}
+
 export interface ExternalRecordFormData extends ExtraData {
   name: string;
 }
-const mkEmptyData = (): NullableDeep<ExternalRecordFormData> => ({})
+export interface ExternalRecordFormPayload {
+  uuid: Nullable<string>;
+  rootUser: string;
+  recordId: string;
+  isActive: boolean;
+  data: ExternalRecordFormData;
+  archived: boolean;
+  createdAt: Nullable<string>;
+  updatedAt: Nullable<string>;
+  tempToken: Nullable<string>;
+}
+
+const mkEmptyData = (): ExternalRecordFormData => ({
+  name: ""
+});
 export default class ExternalRecordForm {
   uuid: Nullable<string> = null
-  rootUser: Nullable<string> = null
-  data: ExternalRecordFormPayload["data"] = mkEmptyData();
+  rootUser: string = ""
+  data: ExternalRecordFormData = mkEmptyData();
   archived: boolean = false
   createdAt: Nullable<string> = null
   updatedAt: Nullable<string> = null
-  isActive: Nullable<boolean> = true
-  recordId: Nullable<string> = null
+  isActive: boolean = true
+  recordId: string = ""
   token: Nullable<string> = null;
 
   static fromJSON(data: ExternalRecordFormPayload) {
     const externalRecordForm = new ExternalRecordForm();
-    externalRecordForm.uuid = data.uuid ?? null
-    externalRecordForm.rootUser = data.root_user ?? null
-    externalRecordForm.isActive = data.is_active ?? true
-    externalRecordForm.recordId = data.record_id ?? null
-    externalRecordForm.createdAt = data.created_at ?? null;
-    externalRecordForm.updatedAt = data.updated_at ?? null;
+    externalRecordForm.uuid = data.uuid;
+    externalRecordForm.rootUser = data.rootUser;
+    externalRecordForm.isActive = data.isActive;
+    externalRecordForm.recordId = data.recordId;
+    externalRecordForm.createdAt = data.createdAt;
+    externalRecordForm.updatedAt = data.updatedAt;
     externalRecordForm.data = {
       ...mkEmptyData(),
       ...data.data
     };
-    externalRecordForm.archived = data.archived ?? false
-    externalRecordForm.token = data.temp_token ?? null;
+    externalRecordForm.archived = data.archived;
+    externalRecordForm.token = data.tempToken;
     return externalRecordForm;
   }
   toJSON(): ExternalRecordFormPayload {
     return {
-      uuid: this.uuid ?? undefined,
-      root_user: this.rootUser ?? undefined,
-      is_active: this.isActive ?? true,
-      record_id: this.recordId ?? undefined,
-      updated_at: this.updatedAt ?? undefined,
-      created_at: this.createdAt ?? undefined,
-      archived: this.archived ?? false,
-      data: this.data
+      uuid: this.uuid,
+      rootUser: this.rootUser,
+      isActive: this.isActive,
+      recordId: this.recordId,
+      updatedAt: this.updatedAt,
+      createdAt: this.createdAt,
+      archived: this.archived,
+      data: this.data,
+      tempToken: this.token
     }
   }
   clone() {

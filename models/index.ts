@@ -14,3 +14,4 @@ export { default as Record } from './Record';
 export * from './Record';
 export { default as User } from './User';
 export * from './User';
+export * from './ModelBase';

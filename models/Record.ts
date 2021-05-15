@@ -1,27 +1,29 @@
 import { PartialDeep } from 'type-fest';
 import { PartialNullableDeep, ExtraData, NullableDeep, Nullable } from '../types/General';
+import { ModelBase } from './ModelBase';
 export interface RecordPayload {
-  uuid?: string;
-  root_user?: string;
-  patient_id?: string;
-  data: PartialNullableDeep<RecordData>;
-  archived?: boolean;
-  created_at?: string;
-  updated_at?: string;
+  uuid: Nullable<string>;
+  rootUser: string;
+  patientId: string;
+  data: RecordData;
+  archived: boolean;
+  createdAt: Nullable<string>;
+  updatedAt: Nullable<string>;
 }
 export interface RecordData extends ExtraData {
   title: string;
   timestamp: string;
 }
-const mkEmptyData = (): NullableDeep<RecordData> => ({
-  timestamp: null,
-  title: null
+export interface RecordModel extends RecordPayload, ModelBase<RecordPayload> {}
+const mkEmptyData = (): RecordData => ({
+  timestamp: "",
+  title: ""
 })
-export default class Record {
+export default class Record implements RecordModel {
   uuid: Nullable<string> = null
-  rootUser: Nullable<string> = null
-  patientId: Nullable<string> = null
-  data: NullableDeep<RecordData> = mkEmptyData();
+  rootUser: string = ""
+  patientId: string = ""
+  data: RecordData = mkEmptyData();
   archived: boolean = false
   createdAt: Nullable<string> = null
   updatedAt: Nullable<string> = null
@@ -29,10 +31,10 @@ export default class Record {
   static fromJSON(data: RecordPayload) {
     const record = new Record();
     record.uuid = data.uuid ?? null
-    record.rootUser = data.root_user ?? null
-    record.patientId = data.patient_id ?? null
-    record.createdAt = data.patient_id ?? null;
-    record.updatedAt = data.updated_at ?? null;
+    record.rootUser = data.rootUser ?? null
+    record.patientId = data.patientId ?? null
+    record.createdAt = data.createdAt ?? null;
+    record.updatedAt = data.updatedAt ?? null;
     record.data = {
       ...mkEmptyData(),
       ...data.data
@@ -42,11 +44,11 @@ export default class Record {
   }
   toJSON(): RecordPayload {
     return {
-      uuid: this.uuid ?? undefined,
-      root_user: this.rootUser ?? undefined,
-      patient_id: this.patientId ?? undefined,
-      created_at: this.createdAt ?? undefined,
-      updated_at: this.updatedAt ?? undefined,
+      uuid: this.uuid,
+      rootUser: this.rootUser,
+      patientId: this.patientId,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
       archived: this.archived,
       data: this.data
     }

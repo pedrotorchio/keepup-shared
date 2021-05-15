@@ -1,45 +1,50 @@
 import { PartialDeep } from 'type-fest';
 import { NullableDeep, ExtraData, Nullable } from '../types/General';
+import { ModelBase } from './ModelBase';
 export interface UserPayload {
-  id: string;
+  id: Nullable<string>;
   username: string;
   email: string;
   name: string;
   archived: boolean;
-  details: NullableDeep<UserDetails>;
-  updated_at: string;
-  created_at: string;
+  details: UserDetails;
+  createdAt: Nullable<string>;
+  updatedAt: Nullable<string>;
 }
 export interface UserDetails extends ExtraData {
-  avatar_url: string;
+  avatarUrl: string;
 }
-const mkDetails = (): NullableDeep<UserDetails> => ({
-  avatar_url: null
+export interface UserModel extends UserPayload, ModelBase<UserPayload> {};
+const mkDetails = (): UserDetails => ({
+  avatarUrl: ""
 });
-export default class User {
+export default class User implements UserModel {
   id: Nullable<string> = null;
-  username: Nullable<string> = null;
-  email: Nullable<string> = null;
-  name: Nullable<string> = null;
-  archived: Nullable<boolean> = null;
-  details: NullableDeep<UserDetails> = mkDetails();
-  updated_at: Nullable<string> = null;
-  created_at: Nullable<string> = null;
+  username: string = "";
+  email: string = "";
+  name: string = "";
+  archived: boolean = false;
+  details: UserDetails = mkDetails();
+  updatedAt: Nullable<string> = null;
+  createdAt: Nullable<string> = null;
 
 
-  static fromJSON(data: PartialDeep<UserPayload>): User {
+  static fromJSON(data: UserPayload): User {
     const user = new User();
-    user.id = data?.id ?? null;
-    user.username = data?.username ?? null;
-    user.email = data?.email ?? null;
-    user.name = data?.name ?? null;
-    user.archived = data?.archived ?? null;
-    user.details = data?.details ?? mkDetails();
-    user.updated_at = data?.updated_at ?? null;
-    user.created_at = data?.created_at ?? null;
+    user.id = data?.id;
+    user.username = data?.username;
+    user.email = data?.email;
+    user.name = data?.name;
+    user.archived = data?.archived;
+    user.details = { 
+      ...data?.details,
+      ...mkDetails()
+    };
+    user.updatedAt = data?.updatedAt;
+    user.createdAt = data?.createdAt;
     return user;
   }
-  toJSON(): NullableDeep<UserPayload> {
+  toJSON(): UserPayload {
     return {
       id: this.id,
       username: this.username,
@@ -47,8 +52,8 @@ export default class User {
       name: this.name,
       archived: this.archived,
       details: this.details,
-      updated_at: this.updated_at,
-      created_at: this.created_at
+      updatedAt: this.updatedAt,
+      createdAt: this.createdAt
     }
   }
   clone() {
