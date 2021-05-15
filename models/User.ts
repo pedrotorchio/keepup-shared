@@ -1,35 +1,35 @@
+import moment, { ISO_8601, Moment } from 'moment';
 import { PartialDeep } from 'type-fest';
 import { NullableDeep, ExtraData, Nullable } from '../types/General';
-import { ModelBase } from './ModelBase';
-export interface UserPayload {
+import { IModeBasePayload, IModelBase } from './ModelBase';
+export interface IUserPayload extends IModeBasePayload {
   id: Nullable<string>;
   username: string;
   email: string;
   name: string;
   archived: boolean;
-  details: UserDetails;
-  createdAt: Nullable<string>;
-  updatedAt: Nullable<string>;
+  details: IUserDetails;
 }
-export interface UserDetails extends ExtraData {
+export interface IUserDetails extends ExtraData {
   avatarUrl: string;
 }
-export interface UserModel extends UserPayload, ModelBase<UserPayload> {};
-const mkDetails = (): UserDetails => ({
+export interface IUserModel extends Omit<IUserPayload, 'updatedAt'|'createdAt'>, IModelBase<IUserPayload> {};
+
+const mkDetails = (): IUserDetails => ({
   avatarUrl: ""
 });
-export default class User implements UserModel {
+export default class User implements IUserModel {
   id: Nullable<string> = null;
   username: string = "";
   email: string = "";
   name: string = "";
   archived: boolean = false;
-  details: UserDetails = mkDetails();
-  updatedAt: Nullable<string> = null;
-  createdAt: Nullable<string> = null;
+  details: IUserDetails = mkDetails();
+  updatedAt: Nullable<Moment> = null;
+  createdAt: Nullable<Moment> = null;
 
 
-  static fromJSON(data: UserPayload): User {
+  static fromJSON(data: IUserPayload): User {
     const user = new User();
     user.id = data?.id;
     user.username = data?.username;
@@ -40,11 +40,11 @@ export default class User implements UserModel {
       ...data?.details,
       ...mkDetails()
     };
-    user.updatedAt = data?.updatedAt;
-    user.createdAt = data?.createdAt;
+    user.updatedAt = data?.updatedAt ? moment(data?.updatedAt, ISO_8601) : null;
+    user.createdAt = data?.createdAt ? moment(data?.createdAt, ISO_8601) : null;
     return user;
   }
-  toJSON(): UserPayload {
+  toJSON(): IUserPayload {
     return {
       id: this.id,
       username: this.username,
@@ -52,8 +52,8 @@ export default class User implements UserModel {
       name: this.name,
       archived: this.archived,
       details: this.details,
-      updatedAt: this.updatedAt,
-      createdAt: this.createdAt
+      updatedAt: this.updatedAt?.toISOString() ?? null,
+      createdAt: this.createdAt?.toISOString() ?? null
     }
   }
   clone() {

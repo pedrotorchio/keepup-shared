@@ -1,8 +1,8 @@
 import { ExtraData, Nullable, NullableObjectFields } from '../types/General';
-import Activity, { ActivityData, ActivityPayload } from './Activity';
-import { ModelBase } from './ModelBase';
+import Activity, { IActivityData, IActivityPayload } from './Activity';
+import { IModelBase } from './ModelBase';
 
-interface GlobalActivityData {
+interface IGlobalActivityData {
   originalIndex: number;
   widthRatio: number;
   normalisedTitleIndex: number;
@@ -10,20 +10,20 @@ interface GlobalActivityData {
   overflowsDay?: boolean;
   widthRatioCapped?: number;
 }
-interface GlobalActivityDetails extends GlobalActivityData, ModelBase<GlobalActivityDetailsPayload> {}
-interface GlobalActivityDetailsPayload extends GlobalActivityData {
-  activity: ActivityPayload;
+interface IGlobalActivityDetails extends IGlobalActivityData, IModelBase<IGlobalActivityDetailsPayload> {}
+interface IGlobalActivityDetailsPayload extends IGlobalActivityData {
+  activity: IActivityPayload;
 }
 
 
-export default class ActivityEntry implements GlobalActivityDetails {
+export default class ActivityEntry implements IGlobalActivityDetails {
   originalIndex: number = -1
   widthRatio: number = 0;
   startRatio: number = 0;
   normalisedTitleIndex: number = -1;
   widthRatioCapped: number = 0;
   overflowsDay: boolean = false;
-  constructor(private activity: Activity, theData: GlobalActivityData) {
+  constructor(private activity: Activity, theData: IGlobalActivityData) {
     this.originalIndex = theData.originalIndex;
     this.widthRatio = theData.widthRatio;
     this.normalisedTitleIndex = theData.normalisedTitleIndex;
@@ -37,10 +37,10 @@ export default class ActivityEntry implements GlobalActivityDetails {
   get uuid(): Nullable<string> {
     return this.activity.uuid;
   }
-  get data(): NullableObjectFields<ActivityData> {
+  get data(): NullableObjectFields<IActivityData> {
     return this.activity.data;
   }
-  toJSON(): GlobalActivityDetailsPayload {
+  toJSON(): IGlobalActivityDetailsPayload {
     return {
       activity: this.activity.toJSON(),
       originalIndex: this.originalIndex,
@@ -51,14 +51,14 @@ export default class ActivityEntry implements GlobalActivityDetails {
       overflowsDay: this.overflowsDay
     }
   }
-  static fromJSON({ activity, ...theData }: GlobalActivityDetailsPayload): ActivityEntry {
+  static fromJSON({ activity, ...theData }: IGlobalActivityDetailsPayload): ActivityEntry {
     const activityModel = Activity.fromJSON(activity); 
     const entry = new ActivityEntry(activityModel, theData);
     return entry;
   }
   clone(): ActivityEntry {
     const activity = this.activity.clone();
-    const theData: GlobalActivityData = {
+    const theData: IGlobalActivityData = {
       originalIndex: this.originalIndex,
       widthRatio: this.widthRatio,
       normalisedTitleIndex: this.normalisedTitleIndex,

@@ -1,40 +1,39 @@
+import moment, { ISO_8601, Moment } from 'moment';
 import { PartialDeep } from 'type-fest';
 import { PartialNullableDeep, ExtraData, NullableDeep, Nullable } from '../types/General';
-import { ModelBase } from './ModelBase';
-export interface RecordPayload {
+import { IModelBase, IModeBasePayload } from './ModelBase';
+export interface IRecordPayload extends IModeBasePayload {
   uuid: Nullable<string>;
   rootUser: string;
   patientId: string;
-  data: RecordData;
+  data: IRecordData;
   archived: boolean;
-  createdAt: Nullable<string>;
-  updatedAt: Nullable<string>;
 }
-export interface RecordData extends ExtraData {
+export interface IRecordData extends ExtraData {
   title: string;
   timestamp: string;
 }
-export interface RecordModel extends RecordPayload, ModelBase<RecordPayload> {}
-const mkEmptyData = (): RecordData => ({
+export interface IRecordModel extends Omit<IRecordPayload, 'createdAt'|'updatedAt'>, IModelBase<IRecordPayload> {}
+const mkEmptyData = (): IRecordData => ({
   timestamp: "",
   title: ""
 })
-export default class Record implements RecordModel {
+export default class Record implements IRecordModel {
   uuid: Nullable<string> = null
   rootUser: string = ""
   patientId: string = ""
-  data: RecordData = mkEmptyData();
+  data: IRecordData = mkEmptyData();
   archived: boolean = false
-  createdAt: Nullable<string> = null
-  updatedAt: Nullable<string> = null
+  createdAt: Nullable<Moment> = null
+  updatedAt: Nullable<Moment> = null
 
-  static fromJSON(data: RecordPayload) {
+  static fromJSON(data: IRecordPayload) {
     const record = new Record();
     record.uuid = data.uuid ?? null
     record.rootUser = data.rootUser ?? null
     record.patientId = data.patientId ?? null
-    record.createdAt = data.createdAt ?? null;
-    record.updatedAt = data.updatedAt ?? null;
+    record.createdAt = data.createdAt ? moment(data.createdAt, ISO_8601) : null;
+    record.updatedAt = data.updatedAt ? moment(data.updatedAt, ISO_8601) : null;
     record.data = {
       ...mkEmptyData(),
       ...data.data
@@ -42,13 +41,13 @@ export default class Record implements RecordModel {
     record.archived = data.archived ?? false
     return record;
   }
-  toJSON(): RecordPayload {
+  toJSON(): IRecordPayload {
     return {
       uuid: this.uuid,
       rootUser: this.rootUser,
       patientId: this.patientId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      createdAt: this.createdAt?.toISOString() ?? null,
+      updatedAt: this.updatedAt?.toISOString() ?? null,
       archived: this.archived,
       data: this.data
     }

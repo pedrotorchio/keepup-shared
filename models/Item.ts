@@ -1,22 +1,22 @@
 import { Primitive } from "type-fest";
 import { Nullable } from "../types/General";
-import { ModelBase } from "./ModelBase";
+import { IModelBase } from "./ModelBase";
 
-export interface ItemPayload<T extends Primitive> {
+export interface IItemPayload<T extends Primitive> {
   label: string;
   value: T;
-  items: ItemPayload<T>[];
+  items: IItemPayload<T>[];
   tags: string[];
 }
-export interface ItemModel<T extends Primitive> extends ModelBase<ItemPayload<T>> {
+export interface IItemModel<T extends Primitive> extends IModelBase<IItemPayload<T>> {
   label: string;
   value: T;
   hasDeepLevels: boolean;
-  items: ItemModel<T>[];
+  items: IItemModel<T>[];
   tags: string[];
   hasTag(tag: string): boolean;
 }
-export default class Item<T extends Primitive = string> implements ItemModel<T> {
+export default class Item<T extends Primitive = string> implements IItemModel<T> {
   private _items: Nullable<Item<T>[]> = null;
   private _tags: string[] = [];
   constructor(private _label: string, private _value?: T) {}
@@ -48,7 +48,7 @@ export default class Item<T extends Primitive = string> implements ItemModel<T> 
   hasTag(tag: string) {
     return this._tags.includes(tag);
   }
-  toJSON(): ItemPayload<T> {
+  toJSON(): IItemPayload<T> {
     return {
       label: this.label,
       value: this.value,
@@ -56,7 +56,7 @@ export default class Item<T extends Primitive = string> implements ItemModel<T> 
       tags: this.tags
     }
   }
-  static fromJSON<T extends Primitive>({ label, value, tags, items }: ItemPayload<T>): Item<T> {
+  static fromJSON<T extends Primitive>({ label, value, tags, items }: IItemPayload<T>): Item<T> {
     const item = new Item(label, value);
     item.tags = tags;
     item.items = items.map(i => Item.fromJSON(i));

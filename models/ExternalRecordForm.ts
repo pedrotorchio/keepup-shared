@@ -1,46 +1,44 @@
+import moment, { ISO_8601, Moment } from 'moment';
 import { PartialDeep } from 'type-fest';
 import { NullableDeep, ExtraData, Nullable, PartialNullableDeep } from '../types/General';
-import { ModelBase } from './ModelBase';
+import { IModeBasePayload, IModelBase } from './ModelBase';
 
-export interface ExternalRecordFormData extends ExtraData {
+export interface IExternalRecordFormData extends ExtraData {
   name: string;
 }
-export interface ExternalRecordFormPayload {
+export interface IExternalRecordFormPayload extends IModeBasePayload {
   uuid: Nullable<string>;
   rootUser: string;
   recordId: string;
   isActive: boolean;
-  data: ExternalRecordFormData;
+  data: IExternalRecordFormData;
   archived: boolean;
-  createdAt: Nullable<string>;
-  updatedAt: Nullable<string>;
   tempToken: Nullable<string>;
 }
+export interface IExternalRecordForm extends Omit<IExternalRecordFormPayload, 'createdAt'|'updatedAt'>, IModelBase<IExternalRecordFormPayload> {}
 
-export interface IExternalRecordForm extends ExternalRecordFormPayload, ModelBase<ExternalRecordFormPayload> {}
-
-const mkEmptyData = (): ExternalRecordFormData => ({
+const mkEmptyData = (): IExternalRecordFormData => ({
   name: ""
 });
 export default class ExternalRecordForm implements IExternalRecordForm {
   uuid: Nullable<string> = null
   rootUser: string = ""
-  data: ExternalRecordFormData = mkEmptyData();
+  data: IExternalRecordFormData = mkEmptyData();
   archived: boolean = false
-  createdAt: Nullable<string> = null
-  updatedAt: Nullable<string> = null
+  createdAt: Nullable<Moment> = null
+  updatedAt: Nullable<Moment> = null
   isActive: boolean = true
   recordId: string = ""
   tempToken: Nullable<string> = null;
 
-  static fromJSON(data: ExternalRecordFormPayload) {
+  static fromJSON(data: IExternalRecordFormPayload) {
     const externalRecordForm = new ExternalRecordForm();
     externalRecordForm.uuid = data.uuid;
     externalRecordForm.rootUser = data.rootUser;
     externalRecordForm.isActive = data.isActive;
     externalRecordForm.recordId = data.recordId;
-    externalRecordForm.createdAt = data.createdAt;
-    externalRecordForm.updatedAt = data.updatedAt;
+    externalRecordForm.createdAt = data.createdAt ? moment(data.createdAt, ISO_8601) : null;
+    externalRecordForm.updatedAt = data.updatedAt ? moment(data.updatedAt, ISO_8601) : null;
     externalRecordForm.data = {
       ...mkEmptyData(),
       ...data.data
@@ -49,14 +47,14 @@ export default class ExternalRecordForm implements IExternalRecordForm {
     externalRecordForm.tempToken = data.tempToken;
     return externalRecordForm;
   }
-  toJSON(): ExternalRecordFormPayload {
+  toJSON(): IExternalRecordFormPayload {
     return {
       uuid: this.uuid,
       rootUser: this.rootUser,
       isActive: this.isActive,
       recordId: this.recordId,
-      updatedAt: this.updatedAt,
-      createdAt: this.createdAt,
+      updatedAt: this.updatedAt?.toISOString() ?? null,
+      createdAt: this.createdAt?.toISOString() ?? null,
       archived: this.archived,
       data: this.data,
       tempToken: this.tempToken

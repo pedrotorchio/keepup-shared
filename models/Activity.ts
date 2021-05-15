@@ -1,35 +1,33 @@
+import moment from 'moment';
+import { ISO_8601, Moment } from 'moment';
 import { Nullable, ExtraData, NullableDeep, PartialNullableDeep, NullableObjectFields } from '../types/General';
-import { ModelBase } from './ModelBase';
+import { IModeBasePayload, IModelBase } from './ModelBase';
 
-export interface ActivityData extends ExtraData {
+export interface IActivityData extends ExtraData {
   shortDescription: string;
   longDescription: string;
   startTime: string;
   duration: number;
   autonomy: number;
 }
-export interface ActivityPayload {
+export interface IActivityPayload extends IModeBasePayload {
   uuid: Nullable<string>
   rootUser: string
   recordId: string
-  data: ActivityData,
+  data: IActivityData,
   archived: boolean
   creatorIdentifier: string
-  updatedAt: Nullable<string>
-  createdAt: Nullable<string>
 }
-export interface IActivityModel extends ModelBase<ActivityPayload> {
+export interface IActivityModel extends IModelBase<IActivityPayload> {
   uuid: Nullable<string>
   rootUser: string
   recordId: string
-  data: ActivityData
+  data: IActivityData
   archived: boolean
   creatorIdentifier: string
-  updatedAt: Nullable<string>
-  createdAt: Nullable<string>
 }
 
-const mkData = (): ActivityData => ({
+const mkData = (): IActivityData => ({
   autonomy: 0,
   duration: 0,
   longDescription: "",
@@ -39,15 +37,15 @@ const mkData = (): ActivityData => ({
 export default class Activity implements IActivityModel {
   uuid: Nullable<string> = null
   rootUser: string = ""
-  data: ActivityData = mkData();
+  data: IActivityData = mkData();
   archived: boolean = false
   creatorIdentifier: string = "";
-  createdAt: Nullable<string> = null
-  updatedAt: Nullable<string> = null
+  createdAt: Nullable<Moment> = null
+  updatedAt: Nullable<Moment> = null
   recordId: string = "";
 
 
-  static fromJSON(data: ActivityPayload) {
+  static fromJSON(data: IActivityPayload) {
     const record = new Activity();
     record.uuid = data.uuid ?? null
     record.rootUser = data.rootUser ?? null
@@ -55,23 +53,23 @@ export default class Activity implements IActivityModel {
       ...mkData(),
       ...data.data
     }
-    record.creatorIdentifier = data.creatorIdentifier ?? null;
-    record.recordId = data.recordId ?? null;
-    record.updatedAt = data.updatedAt ?? null;
-    record.createdAt = data.createdAt ?? null;
-    record.archived = data.archived ?? false
+    record.creatorIdentifier = data.creatorIdentifier;
+    record.recordId = data.recordId;
+    record.archived = data.archived;
+    record.updatedAt = data.updatedAt ? moment(data.updatedAt, ISO_8601) : null;
+    record.createdAt = data.createdAt ? moment(data.createdAt, ISO_8601) : null;
     return record;
   }
 
-  toJSON(): ActivityPayload {
+  toJSON(): IActivityPayload {
     return {
       uuid: this.uuid ?? null,
-      rootUser: this.rootUser ?? null,
-      createdAt: this.createdAt ?? null,
-      updatedAt: this.updatedAt ?? null,
-      recordId: this.recordId ?? null,
-      creatorIdentifier: this.creatorIdentifier ?? null,
-      archived: this.archived ?? false,
+      rootUser: this.rootUser,
+      createdAt: this.createdAt?.toISOString() ?? null,
+      updatedAt: this.updatedAt?.toISOString() ?? null,
+      recordId: this.recordId,
+      creatorIdentifier: this.creatorIdentifier,
+      archived: this.archived,
       data: this.data
     }
   }

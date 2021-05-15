@@ -1,42 +1,41 @@
+import moment, { ISO_8601, Moment } from 'moment';
 import { PartialDeep } from 'type-fest';
 import { PartialNullableDeep, ExtraData, NullableDeep, Nullable } from '../types/General';
-import { ModelBase } from './ModelBase';
-export interface PatientPayload {
+import { IModeBasePayload, IModelBase } from './ModelBase';
+export interface IPatientPayload extends IModeBasePayload {
   uuid: Nullable<string>;
   rootUser: string;
-  data: PatientData;
+  data: IPatientData;
   archived: boolean;
-  createdAt: Nullable<string>;
-  updatedAt: Nullable<string>;
 }
-export interface PatientData extends ExtraData {
+export interface IPatientData extends ExtraData {
   name: string;
   age: number;
   scholarity: number;
   occupation: string;
 }
-export interface PatientModel extends PatientPayload, ModelBase<PatientPayload> {}
+export interface IPatientModel extends Omit<IPatientPayload, 'createdAt'|'updatedAt'>, IModelBase<IPatientPayload> {}
 
-const mkEmptyData = (): PatientData => ({
+const mkEmptyData = (): IPatientData => ({
   age: 0,
   name: "",
   scholarity: 0,
   occupation: ""
 })
-export default class Patient implements PatientModel {
+export default class Patient implements IPatientModel {
   uuid: Nullable<string> = null
   rootUser: string = ""
-  data: PatientData = mkEmptyData();
+  data: IPatientData = mkEmptyData();
   archived: boolean = false
-  createdAt: Nullable<string> = null
-  updatedAt: Nullable<string> = null
+  createdAt: Nullable<Moment> = null
+  updatedAt: Nullable<Moment> = null
 
-  static fromJSON(data: PatientPayload): Patient {
+  static fromJSON(data: IPatientPayload): Patient {
     const patient = new Patient();
     patient.uuid = data.uuid
     patient.rootUser = data.rootUser
-    patient.updatedAt = data.updatedAt
-    patient.createdAt = data.createdAt
+    patient.updatedAt = data.updatedAt ? moment(data.updatedAt, ISO_8601) : null;
+    patient.createdAt = data.createdAt ? moment(data.createdAt, ISO_8601) : null;
     patient.data = {
       ...mkEmptyData(),
       ...data.data
@@ -44,12 +43,12 @@ export default class Patient implements PatientModel {
     patient.archived = data.archived ?? false
     return patient;
   }
-  toJSON(): PatientPayload {
+  toJSON(): IPatientPayload {
     return {
       uuid: this.uuid,
       rootUser: this.rootUser,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      createdAt: this.createdAt?.toISOString() ?? null,
+      updatedAt: this.updatedAt?.toISOString() ?? null,
       data: this.data,
       archived: this.archived
     }
