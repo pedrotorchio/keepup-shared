@@ -28,15 +28,16 @@ export default function debounce <R, A extends any[]>(theFunction: DebounceFunct
     trailingCallback: () => {},
     ...options
   };
-  let timeout: number = 0;
+  let timeout: ReturnType<typeof setTimeout> | null = null;
   let storedResult: R;
-  const zeroTimeout = () => timeout = 0;
+  const isTimeoutClear = () => timeout === null;
+  const resetTimeout = () => timeout = null;
   const wrapWithLeadingCallback = (callback: Function) => async () => {
     await callback();
     leadingCallback(storedResult);
   }
   const wrapWithTrailingCallback = (callback: Function) => async () => {
-    zeroTimeout();
+    resetTimeout();
     await callback();
     trailingCallback(storedResult);
   }
@@ -54,14 +55,14 @@ export default function debounce <R, A extends any[]>(theFunction: DebounceFunct
     const execute = mkPromiseCallbackExecutor(args, resolve, reject);
     const leadingAction = leading ? execute : () => {};
     const trailingAction = leading ? () => {} : execute;
-    if (timeout === 0) await wrapWithLeadingCallback(leadingAction)();
+    if (isTimeoutClear()) await wrapWithLeadingCallback(leadingAction)();
     else idleCallback(storedResult);
     timeout = setTimeout(wrapWithTrailingCallback(trailingAction), wait);
   }
   
 
   return async function(...args: A) {
-    clearTimeout(timeout);
+    if (!isTimeoutClear()) clearTimeout(timeout!);
     return new Promise(mkStaggeredExecution(args));
   }
 }
