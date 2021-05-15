@@ -46,7 +46,7 @@ export const timeTypeArgumentFromValue = (value: TimeInputType): TimeTypeArgumen
 
 export const isValidTimeObject = (time: TimeObject<string | number>, isNumeric: boolean): boolean => {
   const expectedType = isNumeric ? 'number' : 'string';
-  return typeof time.hh === expectedType && time.mm === expectedType;
+  return typeof time?.hh === expectedType && typeof time?.mm === expectedType;
 }
 
 /** FORMATTERS */
