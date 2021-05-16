@@ -48,3 +48,4 @@ export type NullableObjectDeep<ObjectType extends object> = {
   
 export type Prop<T> = () => T;
 export type ExtraData = { [k: string]: any };
+export type StaticThis<T> = { new (): T };
