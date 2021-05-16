@@ -8,6 +8,10 @@ export interface IModelBase<Payload> {
   updatedAt: Nullable<Moment>;
 }
 export interface IModeBasePayload {
-  updatedAt: Nullable<string>
-  createdAt: Nullable<string>
+  updatedAt: Nullable<string>;
+  createdAt: Nullable<string>;
 }
+export interface IModelBaseNoTimestamps<Payload> {
+  clone(): IModelBaseNoTimestamps<Payload>;
+  toJSON(): Payload;
+};

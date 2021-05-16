@@ -1,6 +1,6 @@
 import { Primitive } from "type-fest";
 import { Nullable } from "../types/General";
-import { IModelBase } from "./ModelBase";
+import { IModelBase, IModelBaseNoTimestamps } from "./ModelBase";
 
 export interface IItemPayload<T extends Primitive> {
   label: string;
@@ -8,7 +8,7 @@ export interface IItemPayload<T extends Primitive> {
   items: IItemPayload<T>[];
   tags: string[];
 }
-export interface IItemModel<T extends Primitive> extends IModelBase<IItemPayload<T>> {
+export interface IItemModel<T extends Primitive> extends IModelBaseNoTimestamps<IItemPayload<T>> {
   label: string;
   value: T;
   hasDeepLevels: boolean;

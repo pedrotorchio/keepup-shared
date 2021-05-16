@@ -1,6 +1,6 @@
-import { ExtraData, Nullable, NullableObjectFields } from '../types/General';
+import { Nullable, NullableObjectFields } from '../types/General';
 import Activity, { IActivityData, IActivityPayload } from './Activity';
-import { IModelBase } from './ModelBase';
+import { IModelBaseNoTimestamps } from './ModelBase';
 
 interface IGlobalActivityData {
   originalIndex: number;
@@ -10,19 +10,19 @@ interface IGlobalActivityData {
   overflowsDay?: boolean;
   widthRatioCapped?: number;
 }
-interface IGlobalActivityDetails extends IGlobalActivityData, IModelBase<IGlobalActivityDetailsPayload> {}
+interface IGlobalActivityDetails extends IGlobalActivityData, IModelBaseNoTimestamps<IGlobalActivityDetailsPayload> {}
 interface IGlobalActivityDetailsPayload extends IGlobalActivityData {
   activity: IActivityPayload;
 }
 
-
-export default class ActivityEntry implements IGlobalActivityDetails {
+export default class ActivityEntry implements IGlobalActivityDetails  {
   originalIndex: number = -1
   widthRatio: number = 0;
   startRatio: number = 0;
   normalisedTitleIndex: number = -1;
   widthRatioCapped: number = 0;
   overflowsDay: boolean = false;
+
   constructor(private activity: Activity, theData: IGlobalActivityData) {
     this.originalIndex = theData.originalIndex;
     this.widthRatio = theData.widthRatio;
@@ -56,7 +56,7 @@ export default class ActivityEntry implements IGlobalActivityDetails {
     const entry = new ActivityEntry(activityModel, theData);
     return entry;
   }
-  clone(): ActivityEntry {
+  clone(): IGlobalActivityDetails {
     const activity = this.activity.clone();
     const theData: IGlobalActivityData = {
       originalIndex: this.originalIndex,
