@@ -24,9 +24,9 @@ const mkEmptyData = (): IPatientData => ({
 })
 export default class Patient implements IPatientModel {
   uuid: Nullable<string> = null
-  rootUser: string = ""
+  rootUser = ""
   data: IPatientData = mkEmptyData();
-  archived: boolean = false
+  archived = false
   createdAt: Nullable<Moment> = null
   updatedAt: Nullable<Moment> = null
 

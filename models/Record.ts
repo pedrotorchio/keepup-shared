@@ -20,10 +20,10 @@ const mkEmptyData = (): IRecordData => ({
 })
 export default class Record implements IRecordModel {
   uuid: Nullable<string> = null
-  rootUser: string = ""
-  patientId: string = ""
+  rootUser = ""
+  patientId = ""
   data: IRecordData = mkEmptyData();
-  archived: boolean = false
+  archived = false
   createdAt: Nullable<Moment> = null
   updatedAt: Nullable<Moment> = null
 

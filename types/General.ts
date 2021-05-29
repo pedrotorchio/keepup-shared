@@ -22,22 +22,22 @@ export type NullableDeep<T> = T extends Primitive
 	? NullableObjectDeep<T>
 	: unknown;
 
-export interface NullableMapDeep<KeyType, ValueType> extends Map<NullableDeep<KeyType>, NullableDeep<ValueType>> {}
+export type NullableMapDeep<KeyType, ValueType> = Map<NullableDeep<KeyType>, NullableDeep<ValueType>>
 
 /**
 Same as `NullableDeep`, but accepts only `Set`s as inputs. Internal helper for `NullableDeep`.
 */
-export interface NullableSetDeep<T> extends Set<NullableDeep<T>> {}
+export type NullableSetDeep<T> = Set<NullableDeep<T>>
 
 /**
 Same as `NullableDeep`, but accepts only `ReadonlyMap`s as inputs. Internal helper for `NullableDeep`.
 */
-export interface NullableReadonlyMapDeep<KeyType, ValueType> extends ReadonlyMap<NullableDeep<KeyType>, NullableDeep<ValueType>> {}
+export type NullableReadonlyMapDeep<KeyType, ValueType> = ReadonlyMap<NullableDeep<KeyType>, NullableDeep<ValueType>>
 
 /**
 Same as `NullableDeep`, but accepts only `ReadonlySet`s as inputs. Internal helper for `NullableDeep`.
 */
-export interface NullableReadonlySetDeep<T> extends ReadonlySet<NullableDeep<T>> {}
+export type NullableReadonlySetDeep<T> = ReadonlySet<NullableDeep<T>>
 
 /**
 Same as `NullableDeep`, but accepts only `object`s as inputs. Internal helper for `NullableDeep`.

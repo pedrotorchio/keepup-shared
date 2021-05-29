@@ -36,13 +36,13 @@ const mkData = (): IActivityData => ({
 });
 export default class Activity implements IActivityModel {
   uuid: Nullable<string> = null
-  rootUser: string = ""
+  rootUser = ""
   data: IActivityData = mkData();
-  archived: boolean = false
-  creatorIdentifier: string = "";
+  archived = false
+  creatorIdentifier = "";
   createdAt: Nullable<Moment> = null
   updatedAt: Nullable<Moment> = null
-  recordId: string = "";
+  recordId = "";
 
 
   static fromJSON(data: IActivityPayload) {

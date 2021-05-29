@@ -13,17 +13,17 @@ export interface IUserPayload extends IModeBasePayload {
 export interface IUserDetails extends ExtraData {
   avatarUrl: string;
 }
-export interface IUserModel extends Omit<IUserPayload, 'updatedAt'|'createdAt'>, IModelBase<IUserPayload> {};
+export interface IUserModel extends Omit<IUserPayload, 'updatedAt'|'createdAt'>, IModelBase<IUserPayload> {}
 
 const mkDetails = (): IUserDetails => ({
   avatarUrl: ""
 });
 export default class User implements IUserModel {
   id: Nullable<string> = null;
-  username: string = "";
-  email: string = "";
-  name: string = "";
-  archived: boolean = false;
+  username = "";
+  email = "";
+  name = "";
+  archived = false;
   details: IUserDetails = mkDetails();
   updatedAt: Nullable<Moment> = null;
   createdAt: Nullable<Moment> = null;

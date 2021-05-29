@@ -86,7 +86,7 @@ export function parseTimeStringToTimeObject(time: string, numeric: true | false 
   if (!numeric) return { hh: paddedHH, mm: paddedMM };
   else return { hh: parseInt(paddedHH), mm: parseInt(paddedMM) };
 }
-export const parseTimeStringToMomentObject = (time: string, iso: boolean = false) => {
+export const parseTimeStringToMomentObject = (time: string, iso = false) => {
   const formats = iso ? ISO_8601 : ['HH:mm', 'H:mm', 'HH:m', 'H:m'];
   const theMoment = moment.utc(time, formats);
   return theMoment;

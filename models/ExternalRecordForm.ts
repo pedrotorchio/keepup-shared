@@ -22,13 +22,13 @@ const mkEmptyData = (): IExternalRecordFormData => ({
 });
 export default class ExternalRecordForm implements IExternalRecordForm {
   uuid: Nullable<string> = null
-  rootUser: string = ""
+  rootUser = ""
   data: IExternalRecordFormData = mkEmptyData();
-  archived: boolean = false
+  archived = false
   createdAt: Nullable<Moment> = null
   updatedAt: Nullable<Moment> = null
-  isActive: boolean = true
-  recordId: string = ""
+  isActive = true
+  recordId = ""
   tempToken: Nullable<string> = null;
 
   static fromJSON(data: IExternalRecordFormPayload) {

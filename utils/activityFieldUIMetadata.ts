@@ -1,15 +1,15 @@
 export function getActivityFieldUIMetadata(value: any, fieldName?: string) {
-  let htmlElement = "input";
-  let label: string = "";
-  let attrs = {
+  const htmlElement = "input";
+  let label = "";
+  const attrs = {
     value,
     type: "text",
   } as Record<string, any>
-  let transformers = {
+  const transformers = {
     input: (v: any) => v,
     output: (v: any) => v
   }
-  let listeners = {} as Record<string, Function | null>
+  const listeners = {} as Record<string, Function | null>
 
   switch(fieldName) {
     case 'occupation': {

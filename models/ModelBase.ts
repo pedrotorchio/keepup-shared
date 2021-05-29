@@ -14,4 +14,4 @@ export interface IModeBasePayload {
 export interface IModelBaseNoTimestamps<Payload> {
   clone(): IModelBaseNoTimestamps<Payload>;
   toJSON(): Payload;
-};
+}
