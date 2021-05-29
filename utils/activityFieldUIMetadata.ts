@@ -1,5 +1,4 @@
 export function getActivityFieldUIMetadata(value: any, fieldName?: string) {
-  const type = typeof value;
   let htmlElement = "input";
   let label: string = "";
   let attrs = {
