@@ -17,15 +17,15 @@ type TimeArgumentFor<Input extends TimeInputType> = Input extends TimeObject<str
   : Input extends string
   ? 'string'
   : never;
-type TimeInputFor<Argument extends TimeTypeArgument> = Argument extends 'moment'
-  ? Moment
-  : Argument extends 'object:padded'
-  ? TimeObject<string>
-  : Argument extends 'object:numeric'
-  ? TimeObject<number>
-  : Argument extends 'string'
-  ? string
-  : never;
+// type TimeInputFor<Argument extends TimeTypeArgument> = Argument extends 'moment'
+//   ? Moment
+//   : Argument extends 'object:padded'
+//   ? TimeObject<string>
+//   : Argument extends 'object:numeric'
+//   ? TimeObject<number>
+//   : Argument extends 'string'
+//   ? string
+//   : never;
 
 export const isTimeObject = (time: any): time is TimeObject<number | string> => isValidTimeObject(time, true) || isValidTimeObject(time, false);
 export const isNumericTimeObject = (time: any): time is TimeObject<number> => isValidTimeObject(time, true);
@@ -87,7 +87,7 @@ export function parseTimeStringToTimeObject(time: string, numeric: true | false 
   else return { hh: parseInt(paddedHH), mm: parseInt(paddedMM) };
 }
 export const parseTimeStringToMomentObject = (time: string, iso: boolean = false) => {
-  const formats = iso ? ISO_8601 : ['HH:mm', 'H:mm', 'HH:m', 'H,m'];
+  const formats = iso ? ISO_8601 : ['HH:mm', 'H:mm', 'HH:m', 'H:m'];
   const theMoment = moment.utc(time, formats);
   return theMoment;
 };
