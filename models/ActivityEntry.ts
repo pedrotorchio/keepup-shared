@@ -16,6 +16,7 @@ interface IGlobalActivityDetailsPayload extends IGlobalActivityData {
 }
 
 export default class ActivityEntry implements IGlobalActivityDetails  {
+  private activity: Activity;
   originalIndex = -1
   widthRatio = 0;
   startRatio = 0;
@@ -23,7 +24,8 @@ export default class ActivityEntry implements IGlobalActivityDetails  {
   widthRatioCapped = 0;
   overflowsDay = false;
 
-  constructor(private activity: Activity, theData: IGlobalActivityData) {
+  constructor(activity: Activity, theData: IGlobalActivityData) {
+    this.activity = activity;
     this.originalIndex = theData.originalIndex;
     this.widthRatio = theData.widthRatio;
     this.normalisedTitleIndex = theData.normalisedTitleIndex;

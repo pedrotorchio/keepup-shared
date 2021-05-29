@@ -1,6 +1,5 @@
 import moment, { ISO_8601, Moment } from 'moment';
-import { PartialDeep } from 'type-fest';
-import { NullableDeep, ExtraData, Nullable } from '../types/General';
+import { ExtraData, Nullable } from '../types/General';
 import { IModeBasePayload, IModelBase } from './ModelBase';
 export interface IUserPayload extends IModeBasePayload {
   id: Nullable<string>;
@@ -56,7 +55,7 @@ export default class User implements IUserModel {
       createdAt: this.createdAt?.toISOString() ?? null
     }
   }
-  clone() {
+  clone(): User {
     return User.fromJSON(JSON.parse(JSON.stringify(this)));
   }
 }

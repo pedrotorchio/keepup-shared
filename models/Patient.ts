@@ -1,6 +1,5 @@
 import moment, { ISO_8601, Moment } from 'moment';
-import { PartialDeep } from 'type-fest';
-import { PartialNullableDeep, ExtraData, NullableDeep, Nullable } from '../types/General';
+import { ExtraData, Nullable } from '../types/General';
 import { IModeBasePayload, IModelBase } from './ModelBase';
 export interface IPatientPayload extends IModeBasePayload {
   uuid: Nullable<string>;
@@ -53,7 +52,7 @@ export default class Patient implements IPatientModel {
       archived: this.archived
     }
   }
-  clone() {
+  clone(): Patient {
     return Patient.fromJSON(JSON.parse(JSON.stringify(this)));
   }
 

@@ -1,6 +1,6 @@
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers {
       toBeMomentObject(hh: string | number, mm: string | number): CustomMatcherResult
     }
   }

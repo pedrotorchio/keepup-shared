@@ -1,10 +1,9 @@
+import { scaleLinear, scaleQuantize } from 'd3';
+import { compareTwoStrings } from 'string-similarity';
+import { autonomyList, colors } from '../config';
+import { addTime, ceilTime, floorTime, minutesFromMidnight, timeDiff } from '../utils';
 import Activity from './Activity';
 import ActivityEntry from './ActivityEntry';
-import { color, interpolate, interpolateHcl, interpolateRgb, ScaleLinear, scaleLinear, scaleQuantize } from 'd3';
-import { compareTwoStrings } from 'string-similarity';
-import { PartialDeep } from 'type-fest';
-import { addTime, ceilTime, timeDiff, floorTime, minutesFromMidnight } from '../utils';
-import { autonomyList, colors }  from '../config';
 
 const SIMILARITY_RATE = .8;
 

@@ -1,6 +1,5 @@
-import moment from 'moment';
-import { ISO_8601, Moment } from 'moment';
-import { Nullable, ExtraData, NullableDeep, PartialNullableDeep, NullableObjectFields } from '../types/General';
+import moment, { ISO_8601, Moment } from 'moment';
+import { ExtraData, Nullable } from '../types/General';
 import { IModeBasePayload, IModelBase } from './ModelBase';
 
 export interface IActivityData extends ExtraData {
@@ -45,7 +44,7 @@ export default class Activity implements IActivityModel {
   recordId = "";
 
 
-  static fromJSON(data: IActivityPayload) {
+  static fromJSON(data: IActivityPayload): Activity {
     const record = new Activity();
     record.uuid = data.uuid ?? null
     record.rootUser = data.rootUser ?? null
@@ -73,10 +72,10 @@ export default class Activity implements IActivityModel {
       data: this.data
     }
   }
-  clone() {
+  clone(): Activity {
     return Activity.fromJSON(JSON.parse(JSON.stringify(this)));
   }
-  get isComplete() {
+  get isComplete(): boolean {
     return (
       Boolean(this.data.shortDescription) &&
       Boolean(this.data.startTime) &&

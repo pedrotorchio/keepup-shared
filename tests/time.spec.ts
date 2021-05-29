@@ -1,5 +1,5 @@
-import moment, { Moment } from "moment";
-import { isMomentObject, isNumericTimeObject, isNumericValue, isPaddedTimeObject, isTimeObject, padInteger, padTimeString, parseTime, parseTimeStringToMomentObject, parseTimeStringToTimeObject, stringifyMomentObject, stringifyTime, stringifyTimeObject, minutesFromMidnight, minutesFromMidnightToTime, timeDiff, addTime, floorTime, ceilTime } from "../utils"
+import moment from "moment";
+import { addTime, ceilTime, floorTime, isMomentObject, isNumericTimeObject, isNumericValue, isPaddedTimeObject, isTimeObject, minutesFromMidnight, minutesFromMidnightToTime, padInteger, padTimeString, parseTime, parseTimeStringToMomentObject, parseTimeStringToTimeObject, stringifyMomentObject, stringifyTimeObject, timeDiff } from "../utils";
 
 const mkMoment = (time: string) => moment.utc(time, "hh:mm");
 describe("time module", () => {

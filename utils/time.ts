@@ -77,7 +77,7 @@ export function parseTimeStringToTimeObject(time: string, numeric: true): TimeOb
 export function parseTimeStringToTimeObject(time: string, numeric: false): TimeObject<string>;
 export function parseTimeStringToTimeObject(time: string, numeric: true | false = false): TimeObject<number | string> {
   time = time ?? "";
-  const [_, hh, mm] = time.match(TIME_READ_PATTERN)!;
+  const [, hh, mm] = time.match(TIME_READ_PATTERN)!;
 
   if ((hh && isNumericValue(hh) === false) || (mm && isNumericValue(mm) === false) || !hh) throw new Error("INVALID TIME FORMAT: " + time);
   const paddedHH = padInteger(hh);

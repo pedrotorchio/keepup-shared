@@ -1,7 +1,6 @@
 import moment, { ISO_8601, Moment } from 'moment';
-import { PartialDeep } from 'type-fest';
-import { PartialNullableDeep, ExtraData, NullableDeep, Nullable } from '../types/General';
-import { IModelBase, IModeBasePayload } from './ModelBase';
+import { ExtraData, Nullable } from '../types/General';
+import { IModeBasePayload, IModelBase } from './ModelBase';
 export interface IRecordPayload extends IModeBasePayload {
   uuid: Nullable<string>;
   rootUser: string;
@@ -27,7 +26,7 @@ export default class Record implements IRecordModel {
   createdAt: Nullable<Moment> = null
   updatedAt: Nullable<Moment> = null
 
-  static fromJSON(data: IRecordPayload) {
+  static fromJSON(data: IRecordPayload): Record {
     const record = new Record();
     record.uuid = data.uuid ?? null
     record.rootUser = data.rootUser ?? null
@@ -52,7 +51,7 @@ export default class Record implements IRecordModel {
       data: this.data
     }
   }
-  clone() {
+  clone(): Record {
     return Record.fromJSON(JSON.parse(JSON.stringify(this)));
   }
 

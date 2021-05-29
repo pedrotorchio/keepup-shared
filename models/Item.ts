@@ -1,6 +1,6 @@
 import { Primitive } from "type-fest";
 import { Nullable } from "../types/General";
-import { IModelBase, IModelBaseNoTimestamps } from "./ModelBase";
+import { IModelBaseNoTimestamps } from "./ModelBase";
 
 export interface IItemPayload<T extends Primitive> {
   label: string;
@@ -45,7 +45,7 @@ export default class Item<T extends Primitive = string> implements IItemModel<T>
   set tag(tag: string) {
     this._tags.push(tag);
   }
-  hasTag(tag: string) {
+  hasTag(tag: string): boolean {
     return this._tags.includes(tag);
   }
   toJSON(): IItemPayload<T> {

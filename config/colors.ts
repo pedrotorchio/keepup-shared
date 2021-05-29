@@ -47,5 +47,6 @@ export {
   COLOR__SUCCESS,
   COLOR__MAIN,
   COLOR__FONT,
-  COLOR__FADE
+  COLOR__FADE,
+  CONST__GAP
 }

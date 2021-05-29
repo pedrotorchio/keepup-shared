@@ -1,6 +1,5 @@
 import moment, { ISO_8601, Moment } from 'moment';
-import { PartialDeep } from 'type-fest';
-import { NullableDeep, ExtraData, Nullable, PartialNullableDeep } from '../types/General';
+import { ExtraData, Nullable } from '../types/General';
 import { IModeBasePayload, IModelBase } from './ModelBase';
 
 export interface IExternalRecordFormData extends ExtraData {
@@ -31,7 +30,7 @@ export default class ExternalRecordForm implements IExternalRecordForm {
   recordId = ""
   tempToken: Nullable<string> = null;
 
-  static fromJSON(data: IExternalRecordFormPayload) {
+  static fromJSON(data: IExternalRecordFormPayload): ExternalRecordForm {
     const externalRecordForm = new ExternalRecordForm();
     externalRecordForm.uuid = data.uuid;
     externalRecordForm.rootUser = data.rootUser;
@@ -60,7 +59,7 @@ export default class ExternalRecordForm implements IExternalRecordForm {
       tempToken: this.tempToken
     }
   }
-  clone() {
+  clone(): ExternalRecordForm {
     return ExternalRecordForm.fromJSON(JSON.parse(JSON.stringify(this)));
   }
 
