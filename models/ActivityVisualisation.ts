@@ -114,7 +114,7 @@ export default class ActivityVisualisation {
       if (!duration) return 0;
       const scale = scaleLinear();
       scale.domain([0,  this.wholeDuration]).range([0, 100]);
-      return scale(duration);
+      return scale(duration) as number;
     };
   }
   get startTimeScale(): (time: string) => number {
@@ -124,7 +124,7 @@ export default class ActivityVisualisation {
       // make all of them start in zero
       if (!timeZero || !time) return 0;
       const startTimeInMinutes = timeDiff(time, timeZero);
-      return this.durationScale(startTimeInMinutes);
+      return this.durationScale(startTimeInMinutes) as number;
     }
   }
   get autonomyColorScale(): (autonomy: number) => string {
@@ -141,7 +141,7 @@ export default class ActivityVisualisation {
         .domain(autonomyValues)
         .range(autonomyColorSequence);
 
-      return scale(autonomy);
+      return scale(autonomy) as string;
     }
   }
   get activityList(): Activity[] {
