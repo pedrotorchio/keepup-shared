@@ -1,4 +1,4 @@
-import { Item } from "../models";
+import Item from "../models/Item";
 
 class AutonomyList {
   private items: [Item<number>, Item<number>, ...Item<number>[]] = [
