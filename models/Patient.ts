@@ -9,9 +9,9 @@ export interface IPatientPayload extends IModeBasePayload {
 }
 export interface IPatientData extends ExtraData {
   name: string;
-  age: number;
-  scholarity: number;
-  occupation: string;
+  age?: number;
+  scholarity?: number;
+  occupation?: string;
 }
 export interface IPatientModel extends Omit<IPatientPayload, 'createdAt'|'updatedAt'>, IModelBase<IPatientPayload> {}
 
