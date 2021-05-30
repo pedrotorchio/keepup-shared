@@ -9,17 +9,17 @@ export interface IPatientPayload extends IModeBasePayload {
 }
 export interface IPatientData extends ExtraData {
   name: string;
-  age?: number;
-  scholarity?: number;
-  occupation?: string;
+  age: Nullable<number>;
+  scholarity: Nullable<number>;
+  occupation: Nullable<string>;
 }
 export interface IPatientModel extends Omit<IPatientPayload, 'createdAt'|'updatedAt'>, IModelBase<IPatientPayload> {}
 
 const mkEmptyData = (): IPatientData => ({
-  age: 0,
   name: "",
-  scholarity: 0,
-  occupation: ""
+  age: null,
+  scholarity: null,
+  occupation: null
 })
 export default class Patient implements IPatientModel {
   uuid: Nullable<string> = null
