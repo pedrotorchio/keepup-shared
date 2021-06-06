@@ -28,11 +28,11 @@ const CONST__GAP = "10px"
 // --razzle-dazzle-rose: hsla(315, 100%, 63%, 1);
 
 /* SCSS HEX */
-const COLOR__AUTONOMY_1 = "#eb1405ff";
-const COLOR__AUTONOMY_2 = "#f98901ff";
-const COLOR__AUTONOMY_3 = "#8d5235ff";
-const COLOR__AUTONOMY_4 = "#001dfaff";
-const COLOR__AUTONOMY_5 = "#00b321ff";
+const COLOR__AUTONOMY_1 = "#eb1405";
+const COLOR__AUTONOMY_2 = "#f98901";
+const COLOR__AUTONOMY_3 = "#8d5235";
+const COLOR__AUTONOMY_4 = "#001dfa";
+const COLOR__AUTONOMY_5 = "#4caf50";
 
 
 export {
