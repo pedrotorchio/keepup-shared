@@ -2,7 +2,7 @@ import { scaleLinear, scaleQuantize } from 'd3';
 import { compareTwoStrings } from 'string-similarity';
 import { autonomyList, colors } from '../config';
 import { addTime, ceilTime, floorTime, minutesFromMidnight, timeDiff } from '../utils';
-import Activity from './Activity';
+import Activity, { IActivityData } from './Activity';
 import ActivityEntry from './ActivityEntry';
 
 const SIMILARITY_RATE = .8;
@@ -91,13 +91,13 @@ export default class ActivityVisualisation {
     return this._config;
   }
   get startTime(): string | null {
-    const sortedActivities = sortEntries(this._activityList);
+    const sortedActivities = sortEntries(this.nonEmptyActivities);
     const startTime = sortedActivities[0]?.data.startTime ?? null;
     if (!sortedActivities?.length || !startTime) return null;
     return this.config.roundTime ? floorTime(startTime) : startTime;
   }
   get endTime(): string | null {
-    const sortedActivities = sortEntries(this._activityList);
+    const sortedActivities = sortEntries(this.nonEmptyActivities);
     const lastIndex = sortedActivities.length - 1;
     const lastStartTime = sortedActivities[lastIndex]?.data.startTime ?? null;
     if (!sortedActivities?.length || !lastStartTime) return null;
@@ -107,7 +107,7 @@ export default class ActivityVisualisation {
   }
   get wholeDuration(): number {
     if (this.endTime && this.startTime) return timeDiff(this.endTime, this.startTime);
-    return addDurations(this._activityList);
+    return addDurations(this.nonEmptyActivities);
   }
   get durationScale(): (duration: number) => number {
     return (duration: number) => {
@@ -144,6 +144,12 @@ export default class ActivityVisualisation {
       return scale(autonomy) as string;
     }
   }
+  get nonEmptyActivities(): Activity[] {
+    const has = (a: Activity, data: string) => Boolean(a.data[data]);
+    const hasMininumInfo = (a: Activity) => has(a, 'autonomy') && has(a, 'duration') && has(a, 'startTime');
+    const allActivities = this._activityList;
+    return allActivities.filter(hasMininumInfo);
+  }
   get activityList(): Activity[] {
     return this._activityList;
   }
@@ -151,7 +157,9 @@ export default class ActivityVisualisation {
     this._activityList = value;
   }
   get activityEntries(): ActivityEntry[] {
-    const findTitleGroupIndexByActivityIndex = titleGroupFinderFactory(this._activityList);
+    const nonEmptyActivities = this.nonEmptyActivities;
+    const completeActivities = nonEmptyActivities.filter(a => a.isComplete);
+    const findTitleGroupIndexByActivityIndex = titleGroupFinderFactory(completeActivities);
     const overflowsDay = (act: Activity) => {
       const duration = act.data.duration;
       const startTime = act.data.startTime;
@@ -166,7 +174,7 @@ export default class ActivityVisualisation {
       if (minutesPastMidnight >= 0) return duration! - (minutesPastMidnight + 1);
       return duration!;
     }
-    const entries = this._activityList.map((activity, i) => new ActivityEntry(activity, {
+    const entries = completeActivities.map((activity, i) => new ActivityEntry(activity, {
       originalIndex: i,
       normalisedTitleIndex: findTitleGroupIndexByActivityIndex(i),
       widthRatio: precision2(this.durationScale(activity.data.duration!)),
