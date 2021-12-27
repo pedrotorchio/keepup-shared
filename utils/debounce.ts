@@ -47,7 +47,7 @@ export default function debounce <R, A extends any[]>(theFunction: DebounceFunct
       console.log(timeout, storedResult);
       resolve(storedResult);
     } catch (e) {
-      storedResult = e;
+      storedResult = e as R;
       reject(e);
     }
   };
