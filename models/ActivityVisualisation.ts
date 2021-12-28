@@ -2,7 +2,7 @@ import { scaleLinear, scaleQuantize } from 'd3';
 import { compareTwoStrings } from 'string-similarity';
 import { autonomyList, colors } from '../config';
 import { addTime, ceilTime, floorTime, minutesFromMidnight, timeDiff } from '../utils';
-import Activity, { IActivityData } from './Activity';
+import Activity from './Activity';
 import ActivityEntry from './ActivityEntry';
 
 const SIMILARITY_RATE = .8;

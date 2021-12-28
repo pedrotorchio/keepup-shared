@@ -31,7 +31,7 @@ const CONST__GAP = "10px"
 const COLOR__AUTONOMY_1 = "#eb1405";
 const COLOR__AUTONOMY_2 = "#f98901";
 const COLOR__AUTONOMY_3 = "#8d5235";
-const COLOR__AUTONOMY_4 = "#001dfa";
+const COLOR__AUTONOMY_4 = "#2089dc";
 const COLOR__AUTONOMY_5 = "#4caf50";
 
 
