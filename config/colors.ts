@@ -1,3 +1,5 @@
+import color from 'chroma-js';
+
 const COLOR__INFO = "#0275d8";
 const COLOR__WARNING = "#f99b2f";
 const COLOR__DANGER = "#ff4527";
@@ -27,12 +29,13 @@ const CONST__GAP = "10px"
 // --blue: hsla(233, 100%, 49%, 1);
 // --razzle-dazzle-rose: hsla(315, 100%, 63%, 1);
 
+const mkPastel = (c: string) => color(c).brighten(1.5).desaturate(1.5).hex();
 /* SCSS HEX */
-const COLOR__AUTONOMY_1 = "#eb1405";
-const COLOR__AUTONOMY_2 = "#f98901";
-const COLOR__AUTONOMY_3 = "#8d5235";
-const COLOR__AUTONOMY_4 = "#2089dc";
-const COLOR__AUTONOMY_5 = "#4caf50";
+const COLOR__AUTONOMY_1 = mkPastel("#eb1405");
+const COLOR__AUTONOMY_2 = mkPastel("#f98901");
+const COLOR__AUTONOMY_3 = mkPastel("#8d5235");
+const COLOR__AUTONOMY_4 = mkPastel("#2089dc");
+const COLOR__AUTONOMY_5 = mkPastel("#4caf50");
 
 
 export {
