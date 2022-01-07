@@ -29,13 +29,12 @@ const CONST__GAP = "10px"
 // --blue: hsla(233, 100%, 49%, 1);
 // --razzle-dazzle-rose: hsla(315, 100%, 63%, 1);
 
-const mkPastel = (c: string) => color(c).brighten(1.5).desaturate(1.5).hex();
 /* SCSS HEX */
-const COLOR__AUTONOMY_1 = mkPastel("#eb1405");
-const COLOR__AUTONOMY_2 = mkPastel("#f98901");
-const COLOR__AUTONOMY_3 = mkPastel("#8d5235");
-const COLOR__AUTONOMY_4 = mkPastel("#2089dc");
-const COLOR__AUTONOMY_5 = mkPastel("#4caf50");
+const COLOR__AUTONOMY_1 = "#E76F51";
+const COLOR__AUTONOMY_2 = "#F4A261";
+const COLOR__AUTONOMY_3 = "#E9C46A";
+const COLOR__AUTONOMY_4 = "#2A9D8F";
+const COLOR__AUTONOMY_5 = "#264653";
 
 
 export {
