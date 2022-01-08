@@ -1,4 +1,4 @@
-import color from 'chroma-js';
+
 
 const COLOR__INFO = "#0275d8";
 const COLOR__WARNING = "#f99b2f";
@@ -32,9 +32,9 @@ const CONST__GAP = "10px"
 /* SCSS HEX */
 const COLOR__AUTONOMY_1 = "#E76F51";
 const COLOR__AUTONOMY_2 = "#F4A261";
-const COLOR__AUTONOMY_3 = "#E9C46A";
+const COLOR__AUTONOMY_3 = "#e6b947";
 const COLOR__AUTONOMY_4 = "#2A9D8F";
-const COLOR__AUTONOMY_5 = "#264653";
+const COLOR__AUTONOMY_5 = "#0e526c";
 
 
 export {
