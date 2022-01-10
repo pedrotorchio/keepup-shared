@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "postinstall": "tsc",
+    "build": "tsc",
+    "postinstall": "npm run build",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "author": "pedrotorchio@gmail.com",
