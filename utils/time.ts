@@ -5,7 +5,7 @@ const TIME_DISPLAY_FORMAT = "HH:mm";
 const TIME_READ_PATTERN = /^(\d{1,2})(?::(\d{1,2}))?$/;
 
 /** TYPING */
-type TimeObject<theType extends string | number> = { hh: theType; mm: theType };
+export type TimeObject<theType extends string | number> = { hh: theType; mm: theType };
 type TimeInputType = string | Moment | TimeObject<string | number>;
 type TimeTypeArgument = 'moment' | 'object:padded' | 'object:numeric' | 'string';
 type TimeArgumentFor<Input extends TimeInputType> = Input extends TimeObject<string>
