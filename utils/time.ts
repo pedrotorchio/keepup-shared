@@ -3,7 +3,7 @@ import padLeft from 'pad-left';
 
 const TIME_DISPLAY_FORMAT = "HH:mm";
 const TIME_READ_PATTERN = /^(\d{1,2})(?::(\d{1,2}))?$/;
-
+export const isTimeStringValid = (str: string): boolean => Boolean(TIME_READ_PATTERN.test(str));
 /** TYPING */
 export type TimeObject<theType extends string | number> = { hh: theType; mm: theType };
 type TimeInputType = string | Moment | TimeObject<string | number>;
