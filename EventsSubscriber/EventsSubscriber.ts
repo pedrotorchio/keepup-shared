@@ -1,15 +1,20 @@
 export type Callback = (...args: any[]) => void;
 export type EventsDictionary = {
-  [k: string]: Callback[];
+  [index: string]: Callback;
 }
 export class EventsSubscriber<Events extends EventsDictionary> {
-  private _listeners = {} as Events;
+  private _listeners = {} as {
+    [Key in keyof Events]: Events[Key][];
+  };
   
-  listen<Event extends keyof Events>(event: Event, cb: Events[Event][0]): string {
+  listen<Event extends keyof Events>(event: Event, cb: Events[Event]): string {
+    if (!this._listeners[event]) this._listeners[event] = [];
+
     this._listeners[event].push(cb);
     return `${event}.${this._listeners[event].length - 1}`;
   }
-  publish<Event extends keyof Events>(event: Event, ...parameters: Parameters<Events[Event][0]>): void {
+  publish<Event extends keyof Events>(event: Event, ...parameters: Parameters<Events[Event]>): void {
+    if (!this._listeners[event]) return;
     const allListeners: Callback[] = this._listeners[event];
     allListeners.forEach(listen => listen(...parameters));
   }
