@@ -77,6 +77,14 @@ type VisualisationConfiguration = {
   roundTime: boolean;
   autonomyRange: [number, number];
 };
+
+export const autonomyColorSequence = [
+  colors.COLOR__AUTONOMY_1,
+  colors.COLOR__AUTONOMY_2,
+  colors.COLOR__AUTONOMY_3,
+  colors.COLOR__AUTONOMY_4,
+  colors.COLOR__AUTONOMY_5,
+];
 export default class ActivityVisualisation {
   private _activityList: Activity[] = [];
   private _config: VisualisationConfiguration;
@@ -128,13 +136,7 @@ export default class ActivityVisualisation {
     }
   }
   get autonomyColorScale(): (autonomy: number) => string {
-    const autonomyColorSequence = [
-      colors.COLOR__AUTONOMY_1,
-      colors.COLOR__AUTONOMY_2,
-      colors.COLOR__AUTONOMY_3,
-      colors.COLOR__AUTONOMY_4,
-      colors.COLOR__AUTONOMY_5,
-    ];
+
     return (autonomy: number) => {
       const autonomyValues = this.config.autonomyRange;
       const scale = scaleQuantize<string>()
