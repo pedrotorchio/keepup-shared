@@ -2,7 +2,7 @@ import Axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import { EventsSubscriber } from '../EventsSubscriber/EventsSubscriber';
 
 const hasStatus = (error: AxiosError, st: number) => error?.response?.status == st;
-export function createNewHttpClient(BASE_URL: string): { client: AxiosInstance, eventsSubscriber: EventsSubscriber<{}> } {
+export function createNewHttpClient(BASE_URL: string): { client: AxiosInstance, eventsSubscriber: EventsSubscriber<{}>, setSessionToken: (t: string) => void } {
   const eventsSubscriber = new EventsSubscriber();
   const axiosInstance = Axios.create({
     baseURL: BASE_URL
@@ -26,6 +26,7 @@ export function createNewHttpClient(BASE_URL: string): { client: AxiosInstance, 
     eventsSubscriber.publish("clearToken");
   }
   return {
+    setSessionToken,
     client: axiosInstance,
     eventsSubscriber
   }
